@@ -9,7 +9,8 @@ libbsdiff_@BSDIFF_API_VERSION@_la_LDFLAGS = -version-info $(BSDIFF_SO_VERSION)
 
 bsdiff_includedir = $(includedir)/bsdiff-$(BSDIFF_API_VERSION)
 nobase_bsdiff_include_HEADERS = bsdiff/bsdiff.h \
-				bsdiff/bspatch.h
+				bsdiff/bspatch.h \
+				bsdiff/minibsdiff-config.h
 
 bsdiff_libincludedir = $(libdir)/bsdiff-$(BSDIFF_API_VERSION)/include
 nodist_bsdiff_libinclude_HEADERS = bsdiffconfig.h
