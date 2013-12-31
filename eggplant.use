@@ -1,0 +1,8 @@
+Name: eggplant
+Version: 0.1
+Description: 
+SourcePath: source
+Additionals: source/eggplant/bsdiff.c
+Additionals: source/eggplant/bspatch.c
+Main: eggplant/eggplant
+

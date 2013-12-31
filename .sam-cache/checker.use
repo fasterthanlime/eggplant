@@ -1,0 +1,6 @@
+Name: eggplant
+Version: 0.1
+Description: 
+SourcePath: /home/amos/Dev/eggplant/source
+Additionals: source/eggplant/bspatch.c
+Main: eggplant/eggplant
