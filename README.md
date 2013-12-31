@@ -1,10 +1,12 @@
 ## eggplant
 
+Upgrade utility for games and whatnot
+
 ### Authors
 
-  * Your Name Here
+  * Amos Wenger
   
 ### Links
 
-  *
+  * None!
 
