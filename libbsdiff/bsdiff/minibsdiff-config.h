@@ -41,7 +41,7 @@
 
 /** MUST be 8 bytes long! */
 /** TODO FIXME: we should static_assert this */
-#define BSDIFF_CONFIG_MAGIC "MBSDIF43"
+#define BSDIFF_CONFIG_MAGIC "ALSDIF10"
 
 /* ------------------------------------------------------------------------- */
 /* -- Slop size for temporary patch buffer --------------------------------- */
@@ -60,5 +60,9 @@ typedef uint8_t u_char;
 #ifdef _MSC_VER
 typedef SSIZE_T ssize_t;
 #endif /* _MSC_VER */
+
+#include <stdint.h>
+#include <inttypes.h>
+#include <sys/types.h>
 
 #endif /* _MINIBSDIFF_CONFIG_H_ */

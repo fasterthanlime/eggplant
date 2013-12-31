@@ -1,12 +1,12 @@
 
 use eggplant
-
-include ./bsdiff
-include ./bspatch
+import bsdiff
 
 main: func {
     oldie := "Myes"
     kiddo := "Mreally?"
 
-    "Yay!" println()
+    size := BSDiff patchsize_max(oldie size, kiddo size)
+
+    "A size of #{size}" println()
 }

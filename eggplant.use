@@ -2,7 +2,6 @@ Name: eggplant
 Version: 0.1
 Description: 
 SourcePath: source
-Additionals: source/eggplant/bsdiff.c
-Additionals: source/eggplant/bspatch.c
+Pkgs: bsdiff-1.0
 Main: eggplant/eggplant
 
