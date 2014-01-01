@@ -1,30 +1,54 @@
 
 use eggplant
+import eggplant/[eggdiff, eggpatch]
+import eggplant/sillytest
+
 import bsdiff
 
-main: func {
-    oldie := "Myes"
-    oldiesz := oldie size + 1
-    kiddo := "Mreally?"
-    kiddosz := kiddo size + 1
+// sdk
+import structs/[ArrayList]
 
-    patchsz_max := bsdiff_patchsize_max(oldiesz, kiddosz)
-    patch := gc_malloc(patchsz_max)
+Eggplant: class {
 
-    patchsz := bsdiff(oldie _buffer data, oldiesz,
-                      kiddo _buffer data, kiddosz,
-                      patch, patchsz_max)
+    args: ArrayList<String>
 
-    "oldiesz     = #{oldiesz}" println()
-    "kiddosz     = #{kiddosz}" println()
-    "patchsz_max = #{patchsz_max}" println()
-    "patchsz     = #{patchsz}" println()
+    init: func (=args) {
+        popArg() // ours
+        action := popArg()
 
-    kiddo2sz := bspatch_newsize(patch, patchsz)
-    kiddo2 := gc_malloc(kiddo2sz) as CString
-    bspatch(oldie _buffer data, oldiesz, patch, patchsz, kiddo2, kiddo2sz)
+        match action {
+            case "diff" =>
+                oldie := popArg()
+                kiddo := popArg()
+                egg_diff(oldie, kiddo)
+            case "patch" =>
+                diff := popArg()
+                patch := popArg()
+                egg_patch(diff, patch)
+            case "test" =>
+                sillytest()
+                exit(0)
+            case =>
+                "Unknown action: #{action}" println()
+                exit(1)
+        }
+    }
 
-    "oldie  = #{oldie}" println()
-    "kiddo  = #{kiddo}" println()
-    "kiddo2 = #{kiddo2 toString()}" println()
+    usage: func {
+        "USAGE: eggplant ACTION ARGS" println()
+    }
+
+    popArg: func -> String {
+        if (args empty?()) {
+            usage()
+            exit(1)
+        }
+        args removeAt(0)
+    }
+
 }
+
+main: func (args: ArrayList<String>) {
+    Eggplant new(args)
+}
+
