@@ -4,8 +4,10 @@ import io/[File, FileReader]
 import os/Process
 import text/StringTokenizer
 
-include md5/md5
+// ours
+import eggplant/[buffer]
 
+include md5/md5
 MD5ContextStruct: cover from MD5_CTX
 
 // must be 16 uchars long
@@ -33,8 +35,14 @@ MD5Sum: class {
     data: UChar*
     size: Int { get { 16 } }
 
-    init: func {
+    init: func ~empty {
         data = gc_malloc(size * UChar size) as UChar*
+    }
+
+    init: func ~buff (buffer: EggBuffer) {
+        init()
+        memcpy(data, buffer data, size * UChar size)
+        buffer free()
     }
 
     toString: func -> String {
