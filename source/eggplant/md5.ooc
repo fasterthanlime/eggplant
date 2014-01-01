@@ -1,6 +1,6 @@
 
 // sdk
-import io/File
+import io/[File, FileReader]
 import os/Process
 import text/StringTokenizer
 
@@ -57,8 +57,13 @@ MD5: class {
 
     sum: static func (file: File) -> MD5Sum {
         m := MD5Context new()
-        content := file read()
-        m update(content toCString(), content size)
+        fr := FileReader new(file)
+        buff := Buffer new(4096)
+        while (fr hasNext?()) {
+            fr read(buff)
+            m update(buff data, buff size)
+        }
+        fr close()
         m finish()
     }
 

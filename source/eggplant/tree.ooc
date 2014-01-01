@@ -1,7 +1,7 @@
 
 // sdk
 import io/File
-import structs/ArrayList
+import structs/[ArrayList, HashMap]
 
 // ours
 import eggplant/[md5]
@@ -9,18 +9,28 @@ import eggplant/[md5]
 Tree: class {
 
     file: File
-    nodes := ArrayList<TreeNode> new()
+    nodes := HashMap<String, TreeNode> new()
 
-    init: func (path: String) {
+    init: func ~build (path: String) {
         file = File new(path)
 
         file walk(|f|
-            nodes add(TreeNode new(this, f))
+            add(TreeNode new(this, f))
             true
         )
 
         "For tree #{file path}, got #{nodes size} nodes" println()
     }
+
+    init: func ~empty
+
+    add: func (node: TreeNode) {
+        nodes put(node path, node)
+    }
+
+    size: Int { get {
+        nodes size
+    } }
 
 }
 
@@ -37,7 +47,6 @@ TreeNode: class {
         path = file rebase(tree file) path
         size = file getSize()
         md5 = MD5 sum(file)
-        "New node, path = #{path}, md5 = #{md5}" println()
     }
 }
 
