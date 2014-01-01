@@ -4,3 +4,5 @@ rock_tmp
 
 /eggplant
 *.exe
+*.egg
+*.egg.bz2
