@@ -7,5 +7,5 @@ Name: @PACKAGE_NAME@
 Description: md5 public domain code packaged for good
 Version: @PACKAGE_VERSION@
 URL: @PACKAGE_URL@
-Libs: -L${libdir} -lmd5-@md5_API_VERSION@
-Cflags: -I${includedir}/md5-@md5_API_VERSION@ -I${libdir}/md5-@md5_API_VERSION@/include
+Libs: -L${libdir} -lmd5-@MD5_API_VERSION@
+Cflags: -I${includedir}/md5-@MD5_API_VERSION@ -I${libdir}/md5-@MD5_API_VERSION@/include
