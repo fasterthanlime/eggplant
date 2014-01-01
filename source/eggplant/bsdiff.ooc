@@ -35,7 +35,7 @@ BSDiff: class {
         szmax := bsdiff_patchsize_max(oldsz, newsz)
         buff := EggBuffer new(szmax)
         sz := bsdiff(oldp, oldsz, newp, newsz, buff data, buff size)
-        "szmax = #{sz}, sz = #{sz}" println()
+        "szmax = #{szmax}, sz = #{sz} newsz / sz % = #{(newsz as Float) * 100.0f / (sz as Float)}" println()
         buff trim!(sz)
 
         buff
