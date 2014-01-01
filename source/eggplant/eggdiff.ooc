@@ -3,48 +3,52 @@
 import io/File
 
 // ours
-import eggplant/[size, tree]
+import eggplant/[size, tree, egg, bsdiff, md5]
 
-egg_diff: func (oldie, kiddo: String) {
+egg_diff: func (oldie, kiddo: String) -> Egg {
     ot := Tree new(oldie)
     kt := Tree new(kiddo)
 
-    Differ new(ot, kt)
-
-    "egg_diff: stub!" println()
+    d := Differ new(ot, kt)
+    d egg()
 }
 
 Differ: class {
     ot, kt: Tree
 
-    del := Tree new()
-    add := Tree new()
-    mod := Tree new()
-    equ := Tree new()
+    init: func (=ot, =kt)
 
-    init: func (=ot, =kt) {
+    egg: func -> Egg {
+        egg := Egg new()
+
         ot nodes each(|path, o|
             k := kt nodes get(o path)
             if (!k) {
-                del add(o)
+                egg del add(EggPath new(o path))
             } else if (!k md5 equals?(o md5)) {
-                mod add(o)
+                diff := BSDiff diff(o file, k file)
+                sum := MD5 sum(k file)
+                egg mod add(EggDiff new(k path, diff, sum))
             } else {
-                equ add(o)
+                egg equ add(EggPath new(o path))
             }
         )
 
         kt nodes each(|path, k|
             o := ot nodes get(k path)
             if (!o) {
-                add add(k)
+                buffer := k file read() _buffer
+                sum := MD5 sum(k file)
+                egg add add(EggData new(k path, buffer, sum))
             }
         )
 
-        "#{del size} deleted," println()
-        "#{add size} added," println()
-        "#{mod size} modified," println()
-        "#{equ size} equal" println()
+        "#{egg del size} deleted," println()
+        "#{egg add size} added," println()
+        "#{egg mod size} modified," println()
+        "#{egg equ size} equal" println()
+
+        egg
     }
 }
 

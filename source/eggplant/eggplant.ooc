@@ -1,12 +1,12 @@
 
+// ours
 use eggplant
-import eggplant/[eggdiff, eggpatch]
+import eggplant/[eggdiff, eggpatch, egg]
 import eggplant/sillytest
-
-import bsdiff
 
 // sdk
 import structs/[ArrayList]
+import io/[File]
 
 Eggplant: class {
 
@@ -20,7 +20,8 @@ Eggplant: class {
             case "diff" =>
                 oldie := popArg()
                 kiddo := popArg()
-                egg_diff(oldie, kiddo)
+                egg := egg_diff(oldie, kiddo)
+                egg write(File new("plant.egg"))
             case "patch" =>
                 diff := popArg()
                 patch := popArg()

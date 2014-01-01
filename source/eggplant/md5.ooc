@@ -24,29 +24,30 @@ MD5Context: cover from MD5ContextStruct* {
 
     finish: func -> MD5Sum {
         result := MD5Sum new()
-        MD5_Final(result vals, this)
+        MD5_Final(result data, this)
         result
     }
 }
 
 MD5Sum: class {
-    vals: UChar*
+    data: UChar*
+    size: Int { get { 16 } }
 
     init: func {
-        vals = gc_malloc(16 * UChar size) as UChar*
+        data = gc_malloc(size * UChar size) as UChar*
     }
 
     toString: func -> String {
         res := Buffer new()
-        for (i in 0..16) {
-            res append("%02x" format(vals[i] as Int))
+        for (i in 0..size) {
+            res append("%02x" format(data[i] as Int))
         }
         res toString()
     }
 
     equals?: func (o: This) -> Bool {
-        for (i in 0..16) {
-            if (o vals[i] != vals[i]) return false
+        for (i in 0..size) {
+            if (o data[i] != data[i]) return false
         }
 
         true
