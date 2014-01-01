@@ -26,6 +26,7 @@ Differ: class {
             if (!k) {
                 egg del add(EggPath new(o path))
             } else if (!k md5 equals?(o md5)) {
+                "Modified: #{k path}" println()
                 diff := BSDiff diff(o file, k file)
                 sum := MD5 sum(k file)
                 egg mod add(EggDiff new(k path, diff, sum))
