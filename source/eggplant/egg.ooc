@@ -4,7 +4,7 @@ import io/[File, FileWriter, FileReader, BinarySequence]
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree, md5, bsdiff]
+import eggplant/[tree, md5, bsdiff, buffer]
 
 Egg: class {
     add := ArrayList<EggData> new()
@@ -33,7 +33,7 @@ EggMagic: enum from UInt8 {
 
 EggData: class {
     path: String
-    buffer: Buffer
+    buffer: EggBuffer
     sum: MD5Sum
 
     init: func (=path, =buffer, =sum)
@@ -57,7 +57,7 @@ EggData: class {
 
 EggDiff: class {
     path: String
-    diff: Buffer
+    diff: EggBuffer
     sum: MD5Sum
 
     init: func (=path, =diff, =sum)

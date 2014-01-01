@@ -5,6 +5,9 @@ include bsdiff/bspatch
 // sdk
 import io/File
 
+// ours
+import eggplant/[buffer]
+
 bsdiff_patchsize_max: extern func (oldsz, newsz: SSizeT) -> SSizeT
 bsdiff: extern func (
     oldp: Pointer, oldsz: SSizeT,
@@ -20,23 +23,25 @@ bspatch: extern func (
 
 BSDiff: class {
 
-    diff: static func (oldf, newf: File) -> Buffer {
-        olds := oldf read()
-        news := newf read()
+    diff: static func (oldf, newf: File) -> EggBuffer {
+        olds := EggBuffer new(oldf)
+        news := EggBuffer new(newf)
 
-        oldp := olds _buffer data
-        newp := news _buffer data
+        oldp := olds data
+        newp := news data
         oldsz := olds size
         newsz := news size
 
         szmax := bsdiff_patchsize_max(oldsz, newsz)
-        buff := Buffer new(szmax)
-        buff size = bsdiff(oldp, oldsz, newp, newsz, buff data, buff capacity)
+        buff := EggBuffer new(szmax)
+        sz := bsdiff(oldp, oldsz, newp, newsz, buff data, buff size)
+        "szmax = #{sz}, sz = #{sz}" println()
+        buff trim!(sz)
 
         buff
     }
 
-    patch: static func (oldf: File, patch: Buffer) -> Int {
+    patch: static func (oldf: File, patch: EggBuffer) -> Int {
         raise("BSDiff patch: stub")
         1
     }
