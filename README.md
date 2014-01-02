@@ -19,7 +19,7 @@ eggplant is distributed under the MIT license, see the `LICENSE` file for detail
 ### Links
 
   * Public domain SHA1 implementation: <http://svn.ghostscript.com/jbig2dec/trunk/sha1.c>
-  * bsdiff (original): <https://github.com/thoughtpolice/minibsdiff>
+  * bsdiff (original): <http://www.daemonology.net/bsdiff/>
   * minibsdiff: <https://github.com/thoughtpolice/minibsdiff>
   * xz: <http://tukaani.org/xz/>
   * git: <http://git-scm.com/> (for inspiration)
