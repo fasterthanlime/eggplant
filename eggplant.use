@@ -2,6 +2,6 @@ Name: eggplant
 Version: 0.1
 Description: 
 SourcePath: source
-Pkgs: bsdiff-1.0, md5-1.0, sha1-1.0, liblzma
+Pkgs: bsdiff-1.0, sha1-1.0, liblzma
 Main: eggplant/eggplant
 
