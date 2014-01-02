@@ -18,19 +18,28 @@ Eggplant: class {
 
         match action {
             case "diff" =>
-                oldie := popArg()
-                kiddo := popArg()
+                oldie := File new(popArg())
+                kiddo := File new(popArg())
+
                 egg := egg_diff(oldie, kiddo)
-                src := File new("plant.egg")
+                src := File new("plant.egg.raw")
                 egg write(src)
-                dst := File new("plant.egg.xz")
+                dst := File new("plant.egg")
                 "Compressing..." println()
                 XZ compress(src, dst)
+                src rm()
                 "Done!" println()
             case "patch" =>
-                diff := popArg()
-                patch := popArg()
-                egg_patch(diff, patch)
+                oldie := File new(popArg())
+                src := File new(popArg())
+                dst := File new("plant.egg.raw")
+
+                "Decompressing..." println()
+                XZ decompress(src, dst)
+
+                egg_patch(oldie, dst)
+                dst rm()
+                "Done!" println()
             case "test" =>
                 sillytest()
                 exit(0)

@@ -5,7 +5,7 @@ import io/File
 // ours
 import eggplant/[size, tree, egg, bsdiff, sha1, buffer]
 
-egg_diff: func (oldie, kiddo: String) -> Egg {
+egg_diff: func (oldie, kiddo: File) -> Egg {
     ot := Tree new(oldie)
     kt := Tree new(kiddo)
 

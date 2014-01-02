@@ -5,8 +5,8 @@ import io/File
 // ours
 import eggplant/[egg, buffer]
 
-egg_patch: func (oldie, patch: String) {
-    egg := Egg new(File new(patch))
+egg_patch: func (oldie, eggFile: File) {
+    egg := Egg new(eggFile)
 
     for (mod in egg mod) {
         "mod: #{mod path}, #{mod diff size} bytes diff" println()

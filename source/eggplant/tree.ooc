@@ -11,9 +11,7 @@ Tree: class {
     file: File
     nodes := HashMap<String, TreeNode> new()
 
-    init: func ~build (path: String) {
-        file = File new(path)
-
+    init: func ~build (=file) {
         file walk(|f|
             add(TreeNode new(this, f))
             true
