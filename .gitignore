@@ -6,3 +6,4 @@ rock_tmp
 *.exe
 *.egg
 *.egg.bz2
+*.egg.xz
