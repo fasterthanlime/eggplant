@@ -39,12 +39,12 @@ TreeNode: class {
     path: String
 
     size: SizeT
-    sha1: SHA1Sum
+    sum: SHA1Sum
 
     init: func (=tree, =file) {
         path = file rebase(tree file) path
         size = file getSize()
-        sha1 = SHA1 sum(file)
+        sum = SHA1 sum(file)
     }
 }
 

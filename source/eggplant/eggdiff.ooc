@@ -24,14 +24,14 @@ Differ: class {
         ot nodes each(|path, o|
             k := kt nodes get(o path)
             if (!k) {
-                egg del add(EggPath new(EggMagic DEL, o path))
-            } else if (!k sha1 equals?(o sha1)) {
+                egg del add(EggDel new(o path))
+            } else if (!k sum equals?(o sum)) {
                 "Modified: #{k path}" println()
                 diff := BSDiff diff(o file, k file)
                 sum := SHA1 sum(k file)
                 egg mod add(EggDiff new(k path, diff, sum))
             } else {
-                egg equ add(EggPath new(EggMagic EQU, o path))
+                egg equ add(EggEqu new(k path, k sum))
             }
         )
 

@@ -11,8 +11,8 @@ Egg: class {
 
     add := ArrayList<EggData> new()
     mod := ArrayList<EggDiff> new()
-    del := ArrayList<EggPath> new()
-    equ := ArrayList<EggPath> new()
+    del := ArrayList<EggDel> new()
+    equ := ArrayList<EggEqu> new()
 
     init: func ~empty
 
@@ -30,9 +30,9 @@ Egg: class {
                 case EggMagic DIF =>
                     mod add(EggDiff new(r))
                 case EggMagic DEL =>
-                    del add(EggPath new(EggMagic DEL, r))
+                    del add(EggDel new(r))
                 case EggMagic EQU =>
-                    equ add(EggPath new(EggMagic EQU, r))
+                    equ add(EggEqu new(r))
             }
         }
         r close()
@@ -119,7 +119,8 @@ EggDiff: class {
     write: func (w: EggWriter) {
         w writeMagic(EggMagic DIF)
         w writeString(path)
-w writeMagic(EggMagic DAT)
+
+        w writeMagic(EggMagic DAT)
         w writeBytes(diff data, diff size)
 
         w writeMagic(EggMagic SHA)
@@ -127,19 +128,40 @@ w writeMagic(EggMagic DAT)
     }
 }
 
-EggPath: class {
+EggDel: class {
     path: String
-    magic: UInt8
 
-    init: func ~cons (=magic, =path)
+    init: func ~cons (=path)
 
-    init: func ~read (=magic, r: EggReader) {
+    init: func ~read (r: EggReader) {
         path = r readString()
     }
 
     write: func (w: EggWriter) {
-        w writeMagic(magic)
+        w writeMagic(EggMagic DEL)
         w writeString(path)
+    }
+}
+
+EggEqu: class {
+    path: String
+    sum: SHA1Sum
+
+    init: func ~cons (=path, =sum)
+
+    init: func ~read (r: EggReader) {
+        path = r readString()
+
+        r checkMagic(EggMagic SHA)
+        sum = SHA1Sum new(r readBuffer())
+    }
+
+    write: func (w: EggWriter) {
+        w writeMagic(EggMagic EQU)
+        w writeString(path)
+
+        w writeMagic(EggMagic SHA)
+        w writeBytes(sum data, sum size)
     }
 }
 
