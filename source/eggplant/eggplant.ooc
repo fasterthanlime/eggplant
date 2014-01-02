@@ -1,7 +1,7 @@
 
 // ours
 use eggplant
-import eggplant/[eggdiff, eggpatch, egg, xz]
+import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egg]
 import eggplant/sillytest
 
 // sdk
@@ -20,26 +20,19 @@ Eggplant: class {
             case "diff" =>
                 oldie := File new(popArg())
                 kiddo := File new(popArg())
-
-                egg := egg_diff(oldie, kiddo)
-                src := File new("plant.egg.raw")
-                egg write(src)
-                dst := File new("plant.egg")
-                "Compressing..." println()
-                XZ compress(src, dst)
-                src rm()
-                "Done!" println()
+                patch := File new("plant.egg")
+                egg_diff(oldie, kiddo, patch)
+            case "check" =>
+                oldie := File new(popArg())
+                patch := File new(popArg())
+                egg_check(oldie, patch)
             case "patch" =>
                 oldie := File new(popArg())
-                src := File new(popArg())
-                dst := File new("plant.egg.raw")
-
-                "Decompressing..." println()
-                XZ decompress(src, dst)
-
-                egg_patch(oldie, dst)
-                dst rm()
-                "Done!" println()
+                patch := File new(popArg())
+                egg_patch(oldie, patch)
+            case "dump" =>
+                patch := File new(popArg())
+                egg_dump(patch)
             case "test" =>
                 sillytest()
                 exit(0)

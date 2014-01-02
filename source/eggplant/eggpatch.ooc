@@ -3,14 +3,10 @@
 import io/File
 
 // ours
-import eggplant/[egg, buffer]
+import eggplant/[egg]
 
-egg_patch: func (oldie, eggFile: File) {
-    egg := Egg new(eggFile)
-
-    for (mod in egg mod) {
-        "mod: #{mod path}, #{mod diff size} bytes diff" println()
-    }
+egg_patch: func (oldie, patch: File) {
+    egg := Egg new(patch)
 
     "#{egg del size} deleted," println()
     "#{egg add size} added," println()

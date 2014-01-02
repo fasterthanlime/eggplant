@@ -4,7 +4,7 @@ import io/[File, FileWriter, FileReader, BinarySequence]
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree, sha1, bsdiff, buffer]
+import eggplant/[tree, sha1, bsdiff, buffer, xz]
 
 Egg: class {
     startMagic: UInt32 = 0xBEEFDADD
@@ -17,7 +17,12 @@ Egg: class {
     init: func ~empty
 
     init: func ~load (f: File) {
-        r := EggReader new(f)
+        tmp := File new(f path + ".raw")
+        "Decompressing..." println()
+        XZ decompress(f, tmp)
+        "Done decompressing!" println()
+
+        r := EggReader new(tmp)
         m := r bin u32()
         if (m != startMagic) {
             raise("Invalid magic: %0x" format(m))
@@ -36,10 +41,14 @@ Egg: class {
             }
         }
         r close()
+
+        tmp rm()
     }
 
     write: func (f: File) {
-        w := EggWriter new(f)
+        raw := File new(f path + ".raw")
+
+        w := EggWriter new(raw)
         w bin u32(startMagic)
         for (e in add) {
             e write(w)
@@ -54,6 +63,11 @@ Egg: class {
             e write(w)
         }
         w close()
+
+        "Compressing..." println()
+        XZ compress(raw, f)
+        "Done compressing!" println()
+        raw rm()
     }
 }
 
@@ -221,6 +235,7 @@ EggReader: class {
         buff := Buffer new(len + 1)
         fr read(buff data, 0, len)
         buff data[len + 1] = '\0'
+        buff size = len
         buff toString()
     }
 
