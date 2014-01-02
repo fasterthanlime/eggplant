@@ -1,12 +1,20 @@
 before_install:
-  - sudo aptitude -y -q install curl make libgc-dev
-  - git clone --depth=1 git://github.com/nddrylliog/rock.git 
+  - sudo apt-get -y -qq update
+  - sudo apt-get -y -qq install curl make libgc-dev
+  - git clone --depth=1 git://github.com/nddrylliog/rock.git -b 99x
   - (cd rock && make -s quick-rescue)
   - export PATH=$PATH:$PWD/rock/bin
+  - export PREFIX=$PWD/dummyprefix
+  - export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
+  - mkdir $PREFIX
+  - (cd libbsdiff && autoreconf -i -f)
+  - (cd libsha1 && autoreconf -i -f)
+  - mkdir dummybuild
+  - (cd dummybuild && ../libbsdiff/configure --prefix=$PREFIX && make && make install)
+  - rm -rf dummybuild/*
+  - (cd dummybuild && ../libsha1/configure --prefix=$PREFIX && make && make install)
 
 script:
   - export OOC_LIBS=$PWD
-  - cd samples
-# - mkdir -p travis
-# - rock -v example -o=travis/example && travis/example
+  - rock -vv
 
