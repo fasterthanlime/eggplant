@@ -4,7 +4,7 @@ import io/File
 import structs/[ArrayList, HashMap]
 
 // ours
-import eggplant/[sha1]
+import eggplant/[sha1, utils]
 
 Tree: class {
 
@@ -42,7 +42,7 @@ TreeNode: class {
     sum: SHA1Sum
 
     init: func (=tree, =file) {
-        path = file rebase(tree file) path
+        path = file rebase(tree file) getSlashPath()
         size = file getSize()
         sum = SHA1 sum(file)
     }
