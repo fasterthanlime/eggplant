@@ -7,12 +7,15 @@ before_install:
   - export PREFIX=$PWD/dummyprefix
   - export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
   - mkdir $PREFIX
+  - wget http://tukaani.org/xz/xz-5.0.5.tar.xz -O - | tar xJ
   - (cd libbsdiff && autoreconf -i -f)
   - (cd libsha1 && autoreconf -i -f)
   - mkdir dummybuild
   - (cd dummybuild && ../libbsdiff/configure --prefix=$PREFIX && make && make install)
   - rm -rf dummybuild/*
   - (cd dummybuild && ../libsha1/configure --prefix=$PREFIX && make && make install)
+  - rm -rf dummybuild/*
+  - (cd dummybuild && ../xz-*/configure --prefix=$PREFIX --disable-shared --enable-static && make && make install)
 
 script:
   - export OOC_LIBS=$PWD
