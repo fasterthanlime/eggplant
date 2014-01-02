@@ -41,9 +41,21 @@ BSDiff: class {
         buff
     }
 
-    patch: static func (oldf: File, patch: EggBuffer) -> Int {
-        raise("BSDiff patch: stub")
-        1
+    patch: static func (oldf: File, patch: EggBuffer) -> EggBuffer {
+        patchp  := patch data
+        patchsz := patch size
+
+        newsz := bspatch_newsize(patchp, patchsz)
+        news := EggBuffer new(newsz)
+        newp := news data
+
+        olds := EggBuffer new(oldf)
+        oldp  := olds data
+        oldsz := olds size
+
+        bspatch(oldp, oldsz, patchp, patchsz, newp, newsz)
+
+        news
     }
 
 }

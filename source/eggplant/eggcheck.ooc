@@ -5,21 +5,21 @@ import io/File
 // ours
 import eggplant/[egg, tree, buffer]
 
-egg_check: func (oldie, patch: File) {
-    ot := Tree new(oldie)
+egg_check: func (kiddo, patch: File) {
+    kt := Tree new(kiddo)
     egg := Egg new(patch)
 
     errs := 0
 
     for (e in egg del) {
-        if (ot nodes contains?(e path)) {
+        if (kt nodes contains?(e path)) {
             errs += 1
             "#{e path} should not be there anymore" println()
         }
     }
 
     for (e in egg add) {
-        n := ot nodes get(e path)
+        n := kt nodes get(e path)
         if (!n) {
             errs += 1
             "#{e path} should be there" println()
@@ -33,7 +33,7 @@ egg_check: func (oldie, patch: File) {
     }
 
     for (e in egg mod) {
-        n := ot nodes get(e path)
+        n := kt nodes get(e path)
         if (!n) {
             errs += 1
             "#{e path} should be there" println()
@@ -47,7 +47,7 @@ egg_check: func (oldie, patch: File) {
     }
 
     for (e in egg equ) {
-        n := ot nodes get(e path)
+        n := kt nodes get(e path)
         if (!n) {
             errs += 1
             "#{e path} should be there" println()

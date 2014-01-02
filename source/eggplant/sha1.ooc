@@ -64,7 +64,7 @@ SHA1Sum: class {
 
 SHA1: class {
 
-    sum: static func (file: File) -> SHA1Sum {
+    sum: static func ~fil (file: File) -> SHA1Sum {
         m := SHA1Context new()
         fr := FileReader new(file)
         buff := Buffer new(16384)
@@ -73,6 +73,12 @@ SHA1: class {
             m update(buff data as UChar*, buff size)
         }
         fr close()
+        m finish()
+    }
+
+    sum: static func ~buf (buf: EggBuffer) -> SHA1Sum {
+        m := SHA1Context new()
+        m update(buf data, buf size)
         m finish()
     }
 

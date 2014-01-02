@@ -1,8 +1,7 @@
 
 // ours
 use eggplant
-import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egg]
-import eggplant/sillytest
+import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone]
 
 // sdk
 import structs/[ArrayList]
@@ -23,9 +22,13 @@ Eggplant: class {
                 patch := File new("plant.egg")
                 egg_diff(oldie, kiddo, patch)
             case "check" =>
+                kiddo := File new(popArg())
+                patch := File new(popArg())
+                egg_check(kiddo, patch)
+            case "hone" =>
                 oldie := File new(popArg())
                 patch := File new(popArg())
-                egg_check(oldie, patch)
+                egg_hone(oldie, patch)
             case "patch" =>
                 oldie := File new(popArg())
                 patch := File new(popArg())
@@ -33,9 +36,6 @@ Eggplant: class {
             case "dump" =>
                 patch := File new(popArg())
                 egg_dump(patch)
-            case "test" =>
-                sillytest()
-                exit(0)
             case =>
                 "Unknown action: #{action}" println()
                 exit(1)
