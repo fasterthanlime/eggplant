@@ -4,7 +4,7 @@ import io/File
 import structs/[ArrayList, HashMap]
 
 // ours
-import eggplant/[md5]
+import eggplant/[sha1]
 
 Tree: class {
 
@@ -41,12 +41,12 @@ TreeNode: class {
     path: String
 
     size: SizeT
-    md5: MD5Sum
+    sha1: SHA1Sum
 
     init: func (=tree, =file) {
         path = file rebase(tree file) path
         size = file getSize()
-        md5 = MD5 sum(file)
+        sha1 = SHA1 sum(file)
     }
 }
 

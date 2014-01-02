@@ -4,7 +4,7 @@ import io/[File, FileWriter, FileReader, BinarySequence]
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree, md5, bsdiff, buffer]
+import eggplant/[tree, sha1, bsdiff, buffer]
 
 Egg: class {
     startMagic: UInt32 = 0xBEEFDADD
@@ -30,7 +30,9 @@ Egg: class {
                 case EggMagic DIF =>
                     mod add(EggDiff new(r))
                 case EggMagic DEL =>
-                    del add(EggPath new(r))
+                    del add(EggPath new(EggMagic DEL, r))
+                case EggMagic EQU =>
+                    equ add(EggPath new(EggMagic EQU, r))
             }
         }
         r close()
@@ -48,6 +50,9 @@ Egg: class {
         for (e in del) {
             e write(w)
         }
+        for (e in equ) {
+            e write(w)
+        }
         w close()
     }
 }
@@ -56,14 +61,15 @@ EggMagic: enum from UInt8 {
     ADD = 0xAD
     DEL = 0xD3
     DIF = 0x0D
+    EQU = 0xE0
     DAT = 0xDA
-    MD5 = 0xD5
+    SHA = 0xA1
 }
 
 EggData: class {
     path: String
     buffer: EggBuffer
-    sum: MD5Sum
+    sum: SHA1Sum
 
     init: func ~cons (=path, =buffer, =sum)
 
@@ -73,8 +79,8 @@ EggData: class {
         r checkMagic(EggMagic DAT)
         buffer = r readBuffer()
 
-        r checkMagic(EggMagic MD5)
-        sum = MD5Sum new(r readBuffer())
+        r checkMagic(EggMagic SHA)
+        sum = SHA1Sum new(r readBuffer())
     }
 
     write: func (w: EggWriter) {
@@ -84,7 +90,7 @@ EggData: class {
         w writeMagic(EggMagic DAT)
         w writeBytes(buffer data, buffer size)
 
-        w writeMagic(EggMagic MD5)
+        w writeMagic(EggMagic SHA)
         w writeBytes(sum data, sum size)
     }
 
@@ -96,7 +102,7 @@ EggData: class {
 EggDiff: class {
     path: String
     diff: EggBuffer
-    sum: MD5Sum
+    sum: SHA1Sum
 
     init: func ~cons (=path, =diff, =sum)
 
@@ -106,8 +112,8 @@ EggDiff: class {
         r checkMagic(EggMagic DAT)
         diff = r readBuffer()
 
-        r checkMagic(EggMagic MD5)
-        sum = MD5Sum new(r readBuffer())
+        r checkMagic(EggMagic SHA)
+        sum = SHA1Sum new(r readBuffer())
     }
 
     write: func (w: EggWriter) {
@@ -116,22 +122,23 @@ EggDiff: class {
 w writeMagic(EggMagic DAT)
         w writeBytes(diff data, diff size)
 
-        w writeMagic(EggMagic MD5)
+        w writeMagic(EggMagic SHA)
         w writeBytes(sum data, sum size)
     }
 }
 
 EggPath: class {
     path: String
+    magic: UInt8
 
-    init: func ~cons (=path)
+    init: func ~cons (=magic, =path)
 
-    init: func ~read (r: EggReader) {
+    init: func ~read (=magic, r: EggReader) {
         path = r readString()
     }
 
     write: func (w: EggWriter) {
-        w writeMagic(EggMagic DEL)
+        w writeMagic(magic)
         w writeString(path)
     }
 }

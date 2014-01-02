@@ -11,7 +11,7 @@ include sha1/sha1
 SHA1ContextStruct: cover from SHA1_CTX
 
 // must be 64 uchars long
-SHA1_Final: extern func (result: UChar*, context: SHA1Context)
+SHA1_Final: extern func (context: SHA1Context, result: UChar*)
 
 SHA1Context: cover from SHA1ContextStruct* {
     new: static func -> This {
@@ -26,14 +26,14 @@ SHA1Context: cover from SHA1ContextStruct* {
 
     finish: func -> SHA1Sum {
         result := SHA1Sum new()
-        SHA1_Final(result data, this)
+        SHA1_Final(this, result data as UChar*)
         result
     }
 }
 
 SHA1Sum: class {
     data: UChar*
-    size: Int { get { 64 } }
+    size: Int { get { 20 } }
 
     init: func ~empty {
         data = gc_malloc(size * UChar size) as UChar*
@@ -70,7 +70,7 @@ SHA1: class {
         buff := Buffer new(16384)
         while (fr hasNext?()) {
             fr read(buff)
-            m update(buff data, buff size)
+            m update(buff data as UChar*, buff size)
         }
         fr close()
         m finish()
