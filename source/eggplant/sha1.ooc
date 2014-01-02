@@ -7,33 +7,33 @@ import text/StringTokenizer
 // ours
 import eggplant/[buffer]
 
-include md5/md5
-MD5ContextStruct: cover from MD5_CTX
+include sha1/sha1
+SHA1ContextStruct: cover from SHA1_CTX
 
-// must be 16 uchars long
-MD5_Final: extern func (result: UChar*, context: MD5Context)
+// must be 64 uchars long
+SHA1_Final: extern func (result: UChar*, context: SHA1Context)
 
-MD5Context: cover from MD5ContextStruct* {
+SHA1Context: cover from SHA1ContextStruct* {
     new: static func -> This {
-        c := gc_malloc(MD5ContextStruct size) as This
+        c := gc_malloc(SHA1ContextStruct size) as This
         c _init()
         c
     }
 
-    _init: extern(MD5_Init) func
+    _init: extern(SHA1_Init) func
 
-    update: extern(MD5_Update) func (data: Pointer, size: SizeT)
+    update: extern(SHA1_Update) func (data: Pointer, size: SizeT)
 
-    finish: func -> MD5Sum {
-        result := MD5Sum new()
-        MD5_Final(result data, this)
+    finish: func -> SHA1Sum {
+        result := SHA1Sum new()
+        SHA1_Final(result data, this)
         result
     }
 }
 
-MD5Sum: class {
+SHA1Sum: class {
     data: UChar*
-    size: Int { get { 16 } }
+    size: Int { get { 64 } }
 
     init: func ~empty {
         data = gc_malloc(size * UChar size) as UChar*
@@ -62,10 +62,10 @@ MD5Sum: class {
     }
 }
 
-MD5: class {
+SHA1: class {
 
-    sum: static func (file: File) -> MD5Sum {
-        m := MD5Context new()
+    sum: static func (file: File) -> SHA1Sum {
+        m := SHA1Context new()
         fr := FileReader new(file)
         buff := Buffer new(16384)
         while (fr hasNext?()) {
@@ -77,4 +77,5 @@ MD5: class {
     }
 
 }
+
 
