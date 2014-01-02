@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/nddrylliog/eggplant.png?branch=master)](https://travis-ci.org/nddrylliog/eggplant)
+
 ## eggplant
 
 Incremental, resilient upgrade utility for stuff that has binary assets.
