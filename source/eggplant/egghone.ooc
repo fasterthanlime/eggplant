@@ -9,12 +9,14 @@ egg_hone: func (oldie, patch: File) {
     ot := Tree new(oldie)
     egg := Egg new(patch)
 
+    errs := 0
+
     for (e in egg del) {
         n := ot nodes get(e path)
 
         if (!n) {
             "#{e path} should be there so we can delete it" println()
-            exit(1)
+            errs += 1
         }
     }
 
@@ -23,7 +25,8 @@ egg_hone: func (oldie, patch: File) {
 
         if (!n) {
             "#{e path} should be there so we can equ it" println()
-            exit(1)
+            errs += 1
+            continue
         }
 
         buf := EggBuffer new(n file)
@@ -31,14 +34,18 @@ egg_hone: func (oldie, patch: File) {
         buf free()
 
         if (!sum equals?(e sum)) {
-            "#{e path} equ but sha1 mismatch. expected: #{e sum}, got: #{sum}"
+            "#{e path} equ but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
+            errs += 1
+            continue
         }
     }
 
     for (e in egg add) {
         sum := SHA1 sum(e buffer)
         if (!sum equals?(e sum)) {
-            "#{e path} added but sha1 mismatch. expected: #{e sum}, got: #{sum}"
+            "#{e path} added but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
+            errs += 1
+            continue
         }
     }
 
@@ -47,7 +54,8 @@ egg_hone: func (oldie, patch: File) {
 
         if (!n) {
             "#{e path} should be there so we can mod it" println()
-            exit(1)
+            errs += 1
+            continue
         }
 
         news := BSDiff patch(n file, e diff)
@@ -55,7 +63,9 @@ egg_hone: func (oldie, patch: File) {
         news free()
 
         if (!sum equals?(e sum)) {
-            "#{e path} added but sha1 mismatch. expected: #{e sum}, got: #{sum}"
+            "#{e path} modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
+            errs += 1
+            continue
         }
     }
 
@@ -64,6 +74,11 @@ egg_hone: func (oldie, patch: File) {
     "#{egg mod size} modified," println()
     "#{egg equ size} equal" println()
 
-    "all good!" println()
+    if (errs > 0) {
+        "#{errs} errors" println()
+        exit(1)
+    } else {
+        "no errors" println()
+    }
 }
 
