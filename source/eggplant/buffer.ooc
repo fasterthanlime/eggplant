@@ -12,12 +12,11 @@ EggBuffer: class {
 
     init: func ~readFile (file: File) {
         off: SizeT = 0
-        bufsize: SizeT = 4096
         init(file getSize())
 
         fR := FileReader new(file)
-        while (fR hasNext?()) {
-            off += fR read(data, off, bufsize)
+        while (off < size) {
+            off += fR read(data, off, size - off)
         }
         fR close()
     }
