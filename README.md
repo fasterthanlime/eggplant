@@ -2,8 +2,11 @@
 
 Incremental, resilient upgrade utility for stuff that has binary assets.
 
+**DISCLAIMER: This is pre-pre-prealpha software. Don't rely on it.**
+
 ### Deps
 
+  * rock 0.9.9 or better
   * libsha1, bundled - do the autoconf dance
   * libbsdiff, bundled - same
   * xz, tested with 5.0.5
