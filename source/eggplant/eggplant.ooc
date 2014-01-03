@@ -9,17 +9,18 @@ import io/[File]
 
 Eggplant: class {
 
+    action := "null"
     args: ArrayList<String>
 
     init: func (=args) {
-        popArg() // ours
-        action := popArg()
+        popArg() // executable path ($0)
+        action = popArg()
 
         match action {
             case "diff" =>
                 oldie := File new(popArg())
                 kiddo := File new(popArg())
-                patch := File new("plant.egg")
+                patch := File new(popArg())
                 egg_diff(oldie, kiddo, patch)
             case "check" =>
                 kiddo := File new(popArg())
@@ -43,7 +44,20 @@ Eggplant: class {
     }
 
     usage: func {
-        "USAGE: eggplant ACTION ARGS" println()
+        match action {
+            case "diff" =>
+                "USAGE: eggplant diff OLDIE KIDDO PATCH.egg"
+            case "check" =>
+                "USAGE: eggplant diff KIDDO PATCH.egg"
+            case "hone" =>
+                "USAGE: eggplant diff OLDIE PATCH.egg"
+            case "patch" =>
+                "USAGE: eggplant diff OLDIE PATCH.egg"
+            case "dump" =>
+                "USAGE: eggplant dump PATCH.egg"
+            case =>
+                "USAGE: eggplant ACTION ARGS"
+        } println()
     }
 
     popArg: func -> String {
