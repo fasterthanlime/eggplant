@@ -22,6 +22,7 @@ EggBuffer: class {
     }
 
     write: func (file: File) {
+        file parent mkdirs()
         fW := FileWriter new(file)
         fW write(data, size)
         fW close()
