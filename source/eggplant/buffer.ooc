@@ -1,6 +1,6 @@
 
 // sdk
-import io/[File, FileReader]
+import io/[File, FileReader, FileWriter]
 
 EggBuffer: class {
     data: UChar*
@@ -19,6 +19,12 @@ EggBuffer: class {
             off += fR read(data, off, size - off)
         }
         fR close()
+    }
+
+    write: func (file: File) {
+        fW := FileWriter new(file)
+        fW write(data, size)
+        fW close()
     }
 
     trim!: func (=size) {
