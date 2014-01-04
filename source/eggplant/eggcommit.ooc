@@ -21,11 +21,11 @@ egg_commit: func (ver: String, kiddo: File) {
     }
     ot := Tree new(oldie)
 
-    upgrade := repo eggFile("#{latest}-to-#{ver}")
+    upgrade := repo eggFile("#{latest}-to-#{ver}.egg")
     "Writing ugprade egg to #{upgrade}" println()
     egg_tree_diff(ot, kt, upgrade)
 
-    check := repo eggFile("#{ver}")
+    check := repo eggFile("#{ver}.egg")
     "Writing ugprade egg to #{check}" println()
     egg_tree_diff(kt, kt, check)
 

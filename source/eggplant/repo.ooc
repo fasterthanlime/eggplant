@@ -59,7 +59,7 @@ Repo: class {
     }
 
     eggFile: func (name: String) -> File {
-        File new(folder, "eggs/#{name}.egg")
+        File new(folder, "eggs/#{name}")
     }
 
     store: func (tree: Tree) {
