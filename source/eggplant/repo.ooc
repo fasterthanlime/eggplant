@@ -8,7 +8,7 @@ import io/File
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree]
+import eggplant/[tree, utils]
 
 /**
  * An eggplant repo
@@ -19,18 +19,7 @@ Repo: class {
 
     init: func (.folder) {
         this folder = folder getAbsoluteFile()
-        idxFile := getIndexFile()
-        if (!idxFile exists?()) {
-            bail("Not in an eggplant repo! (no index.yml) Bailing out.")
-        }
-
-        parser := YAMLParser new(idxFile)
-        doc := parser parseDocument()
-        index = doc getRootNode() asMap()
-    }
-
-    getIndexFile: func -> File {
-        File new(folder, "index.yml")
+        refreshIndex()
     }
 
     getName: func -> String {
@@ -65,6 +54,10 @@ Repo: class {
         index["channels"][chan] _
     }
 
+    versionEgg: func (ver, type: String) -> File {
+        eggFile(index["versions"][ver][type] _)
+    }
+
     eggFile: func (name: String) -> File {
         File new(folder, "eggs/#{name}.egg")
     }
@@ -82,15 +75,37 @@ Repo: class {
         node["check"] = checkName
         index["versions"][ver] = node
 
-        idx := getIndexFile()
-        idxNew := File new(idx path + ".new")
-        index write(idxNew)
+        saveAndRefresh()
     }
 
-}
+    removeVersion: func(ver: String) {
+        index["versions"] asMap() map remove(ver)
+        index write(getIndexFile())
+        // re-read YAML file after writing it
+        refreshIndex()
+    }
 
-bail: func (msg: String) {
-    msg println()
-    exit(1)
+    // loading/writing stuff
+
+    getIndexFile: func -> File {
+        File new(folder, "index.yml")
+    }
+
+    saveAndRefresh: func {
+        index write(getIndexFile())
+        refreshIndex()
+    }
+
+    refreshIndex: func {
+        idxFile := getIndexFile()
+        if (!idxFile exists?()) {
+            bail("Not in an eggplant repo! (no index.yml) Bailing out.")
+        }
+
+        parser := YAMLParser new(idxFile)
+        doc := parser parseDocument()
+        index = doc getRootNode() asMap()
+    }
+
 }
 

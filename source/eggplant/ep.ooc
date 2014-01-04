@@ -1,7 +1,7 @@
 
 // ours
 use eggplant
-import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush]
+import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush, eggnuke]
 
 // sdk
 import structs/[ArrayList]
@@ -58,6 +58,10 @@ Eggplant: class {
                 target := File new(popArg())
                 egg_checkout(ver, target)
 
+            case "nuke" =>
+                ver := popArg()
+                egg_nuke(ver)
+
             case "push" =>
                 egg_push()
 
@@ -92,12 +96,14 @@ Eggplant: class {
             // repo stuff
             case "log" =>
                 "USAGE: #{us} log"
-            case "push" =>
-                "USAGE: #{us} push"
             case "commit" =>
                 "USAGE: #{us} commit VERSION KIDDO"
             case "checkout" =>
                 "USAGE: #{us} checkout VERSION TARGET"
+            case "nuke" =>
+                "USAGE: #{us} nuke VERSION"
+            case "push" =>
+                "USAGE: #{us} push"
 
             // help
             case "help" =>
@@ -165,9 +171,10 @@ Eggplant: class {
                 "------------------------------------" println()
                 println()
                 " - #{us} log: display all versions in the current repo" println()
-                " - #{us} push: push new objects and eggs to a remote warehouse" println()
                 " - #{us} commit VERSION KIDDO: craft an .egg to update repo to KIDDO state & add the version to repo" println()
+                " - #{us} nuke VERSION: remove all traces of a version from the repo" println()
                 " - #{us} checkout VERSION TARGET: reproduce the state of the repo at VERSION in TARGET directory" println()
+                " - #{us} push: push new objects and eggs to a remote warehouse" println()
                 println()
                 "To get help about a specific command, do '#{us} help COMMAND'" println()
 

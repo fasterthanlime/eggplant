@@ -7,6 +7,9 @@ import yaml/[Document, Parser, Utils]
 import io/File
 import structs/[ArrayList]
 
+// ours
+import eggplant/[utils]
+
 Warehouse: class {
     war: MappingNode
     base: File
@@ -48,18 +51,5 @@ Warehouse: class {
         "#{getUser()}@#{getHost()}:#{getPath()}"
     }
 
-}
-
-extend File {
-
-    hasChild?: func (name: String) -> Bool {
-        File new(this, name) exists?()
-    }
-
-}
-
-bail: func (msg: String) {
-    msg println()
-    exit(1)
 }
 

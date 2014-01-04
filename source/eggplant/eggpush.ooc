@@ -2,10 +2,10 @@
 // sdk
 import io/File
 import structs/ArrayList
-import os/[Time, Process]
+import os/[Process]
 
 // ours
-import eggplant/[warehouse]
+import eggplant/[warehouse, utils]
 
 egg_push: func {
     w := Warehouse new()
@@ -19,19 +19,10 @@ egg_push: func {
     args add("--rsh=ssh")
     args add(".") // src
     args add(w getUrl()) // dst
-    "Pushing #{w base path}" println()
+    "Will push #{w base path}, launching the following command:" println()
     "> #{args join(" ")}" println()
 
-    timeout := 5
-    "Giving you #{timeout} secs to change your mind..." println()
-
-    while (timeout > 0) {
-        "#{timeout}..." println()
-        Time sleepSec(1)
-        timeout -= 1
-    }
-
-    "There we go." println()
+    thinkingTime()
 
     p := Process new(args)
     p setCwd(w base path)
