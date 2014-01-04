@@ -27,7 +27,7 @@ egg_commit: func (ver: String, kiddo: File) {
 
     check := repo eggFile("#{ver}")
     "Writing ugprade egg to #{check}" println()
-    egg := egg_tree_diff(kt, kt, check)
+    egg_tree_diff(kt, kt, check)
 
     "Storing objects in repo #{repo getName()}" println()
     repo store(kt)
@@ -37,11 +37,6 @@ egg_commit: func (ver: String, kiddo: File) {
 
     "Removing oldie tmp dir" println()
     oldie rm_rf()
-
-    "#{egg del size} deleted," println()
-    "#{egg add size} added," println()
-    "#{egg mod size} modified," println()
-    "#{egg equ size} equal" println()
 
     if (errs > 0) {
         "#{errs} errors" println()

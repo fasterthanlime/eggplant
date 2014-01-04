@@ -4,7 +4,7 @@ import io/[File, FileWriter, FileReader, BinarySequence]
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree, sha1, bsdiff, buffer, xz]
+import eggplant/[tree, sha1, bsdiff, buffer, xz, size]
 
 Egg: class {
     startMagic: UInt32 = 0xBEEFDADD
@@ -14,12 +14,14 @@ Egg: class {
     del := ArrayList<EggDel> new()
     equ := ArrayList<EggEqu> new()
 
+    file: File
+
     init: func ~empty
 
-    init: func ~load (f: File) {
-        tmp := File new(f path + ".raw")
+    init: func ~load (=file) {
+        tmp := File new(file path + ".raw")
         "Decompressing..." println()
-        XZ decompress(f, tmp)
+        XZ decompress(file, tmp)
         "Done decompressing!" println()
 
         r := EggReader new(tmp)
@@ -45,8 +47,8 @@ Egg: class {
         tmp rm()
     }
 
-    write: func (f: File) {
-        raw := File new(f path + ".raw")
+    write: func (=file) {
+        raw := File new(file path + ".raw")
 
         w := EggWriter new(raw)
         w bin u32(startMagic)
@@ -65,9 +67,25 @@ Egg: class {
         w close()
 
         "Compressing..." println()
-        XZ compress(raw, f)
+        XZ compress(raw, file)
         "Done compressing!" println()
         raw rm()
+    }
+
+    getName: func -> String {
+        file ? file path : "<freshly hatched egg>"
+    }
+
+    getSize: func -> String {
+        file ? Size format(file getSize()) : "unknown size"
+    }
+
+    stats: func -> String {
+        "#{getName()} (#{getSize()}) #{del size} deleted, #{add size} added, #{mod size} modified, #{equ size} equal"
+    }
+
+    printStats: func {
+        stats() println()
     }
 }
 

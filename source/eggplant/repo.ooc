@@ -16,16 +16,22 @@ import eggplant/[tree]
 Repo: class {
     folder: File
     index: MappingNode
+    doc: Document
 
-    init: func (=folder) {
-        idxFile := File new(folder, "index.yml")
+    init: func (.folder) {
+        this folder = folder getAbsoluteFile()
+        idxFile := getIndexFile()
         if (!idxFile exists?()) {
             bail("Not in an eggplant repo! (no index.yml) Bailing out.")
         }
 
         parser := YAMLParser new(idxFile)
-        doc := parser parseDocument()
+        doc = parser parseDocument()
         index = doc getRootNode() asMap()
+    }
+
+    getIndexFile: func -> File {
+        File new(folder, "index.yml")
     }
 
     getName: func -> String {
@@ -71,7 +77,15 @@ Repo: class {
 
     addVersion: func (ver: String, upName, checkName: String) {
         "Storing version #{ver} (upName #{upName}, checkName #{checkName}) in repo #{getName()}" println()
-        "stub" println()
+
+        node := MappingNode new()
+        node put("upgrade", ScalarNode new(upName))
+        node put("check", ScalarNode new(checkName))
+        index["versions"] asMap() map put(ver, node)
+
+        idx := getIndexFile()
+        idxNew := File new(idx path + ".new")
+        doc write(idxNew)
     }
 
 }

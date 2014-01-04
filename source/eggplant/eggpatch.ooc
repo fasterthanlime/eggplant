@@ -76,8 +76,5 @@ egg_patch: func (oldie, patch: File) {
             continue
         }
     }
-    "#{egg del size} deleted," println()
-    "#{egg add size} added," println()
-    "#{egg mod size} modified," println()
-    "#{egg equ size} equal" println()
+    egg printStats()
 }

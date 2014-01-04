@@ -69,10 +69,7 @@ egg_hone: func (oldie, patch: File) {
         }
     }
 
-    "#{egg del size} deleted," println()
-    "#{egg add size} added," println()
-    "#{egg mod size} modified," println()
-    "#{egg equ size} equal" println()
+    egg printStats()
 
     if (errs > 0) {
         "#{errs} errors" println()
