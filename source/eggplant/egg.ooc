@@ -20,9 +20,8 @@ Egg: class {
 
     init: func ~load (=file) {
         tmp := File new(file path + ".raw")
-        "Decompressing..." println()
+        "Decompressing from #{file path}..." println()
         XZ decompress(file, tmp)
-        "Done decompressing!" println()
 
         r := EggReader new(tmp)
         m := r bin u32()
@@ -66,9 +65,8 @@ Egg: class {
         }
         w close()
 
-        "Compressing..." println()
+        "Compressing to #{file path}..." println()
         XZ compress(raw, file)
-        "Done compressing!" println()
         raw rm()
     }
 
@@ -86,6 +84,10 @@ Egg: class {
 
     printStats: func {
         stats() println()
+    }
+
+    nodeCount: func -> Int {
+        equ size + add size + mod size
     }
 }
 

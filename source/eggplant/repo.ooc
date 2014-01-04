@@ -8,7 +8,7 @@ import io/File
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree, utils]
+import eggplant/[tree, utils, buffer, sha1, egg]
 
 /**
  * An eggplant repo
@@ -62,9 +62,51 @@ Repo: class {
         File new(folder, "eggs/#{name}")
     }
 
+    objFile: func (sum: String) -> File {
+        prefix1 := sum[0..1]
+        prefix2 := sum[1..2]
+        full := "objects/#{prefix1}/#{prefix2}/#{sum}"
+        File new(folder, full)
+    }
+
     store: func (tree: Tree) {
         "Storing #{tree getPath()} in repo #{getName()}" println()
-        "stub" println()
+
+        tree nodes each(|path, node|
+            dest := objFile(node sum toString())
+
+            if (dest exists?()) {
+                // Already have it. Joy! Check it again just in case.
+                exsum := SHA1 sum(dest)
+                if (!exsum equals?(node sum)) {
+                    // rewrite it then
+                    "#{dest path} was corrupted, rewriting" println()
+                    dest rm()
+                }
+            }
+            
+            if (!dest exists?()) {
+                buf := EggBuffer new(node file)
+                buf write(dest)
+                buf free()
+            }
+        )
+    }
+
+    checkout: func (egg: Egg, target: File) {
+        doSingle := func (path: String, sum: SHA1Sum) {
+            obj := objFile(sum toString())
+            dest := File new(target, path)
+            "Writing #{obj path} to #{dest path}" println()
+
+            buf := EggBuffer new(obj)
+            buf write(dest)
+            buf free()
+        }
+
+        for (e in egg equ) { doSingle(e path, e sum) }
+        for (e in egg add) { doSingle(e path, e sum) }
+        for (e in egg mod) { doSingle(e path, e sum) }
     }
 
     addVersion: func (ver: String, upName, checkName: String) {
