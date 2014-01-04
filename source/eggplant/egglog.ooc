@@ -12,6 +12,7 @@ import eggplant/[repo]
 egg_log: func {
     r := Repo new(File new(".") getAbsoluteFile())
 
+    "[#{r getName()}]" println()
     "Channels: " println()
 
     for (c in r getChannels()) {

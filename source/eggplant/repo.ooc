@@ -25,6 +25,10 @@ Repo: class {
         index = doc getRootNode() asMap()
     }
 
+    getName: func -> String {
+        folder getName()
+    }
+
     getVersions: func -> ArrayList<String> {
         list := ArrayList<String> new()
         index["versions"] each(|name, val|

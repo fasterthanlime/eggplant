@@ -13,6 +13,7 @@ Incremental, resilient upgrade utility for stuff that has binary assets.
   * libsha1, bundled - do the autoconf dance
   * libbsdiff, bundled - same
   * xz, tested with 5.0.5
+  * libyaml, tested with 0.1.4
 
 ### Authors
 
