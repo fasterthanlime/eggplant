@@ -6,13 +6,16 @@ import io/File
 import eggplant/[size, tree, egg, bsdiff, sha1, buffer]
 
 egg_diff: func (oldie, kiddo, patch: File) {
-    "Reading trees..." println()
     ot := Tree new(oldie)
     kt := Tree new(kiddo)
+    egg_tree_diff(ot, kt, patch)
+}
 
+egg_tree_diff: func (ot, kt: Tree, patch: File) -> Egg {
     d := Differ new(ot, kt)
     egg := d egg()
     egg write(patch)
+    egg
 }
 
 Differ: class {

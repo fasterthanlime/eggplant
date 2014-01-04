@@ -12,12 +12,18 @@ Tree: class {
     nodes := HashMap<String, TreeNode> new()
 
     init: func ~build (=file) {
-        file walk(|f|
-            add(TreeNode new(this, f))
-            true
-        )
+        if (file) {
+            file walk(|f|
+                add(TreeNode new(this, f))
+                true
+            )
+        }
 
-        "For tree #{file path}, got #{nodes size} nodes" println()
+        "For tree #{getPath()}, got #{nodes size} nodes" println()
+    }
+
+    getPath: func -> String {
+        file ? file path : "<null>"
     }
 
     init: func ~empty

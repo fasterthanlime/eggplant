@@ -41,13 +41,13 @@ Eggplant: class {
             case "log" =>
                 egg_log()
             case "commit" =>
-                kiddo := File new(popArg())
-                patch := File new(popArg())
-                egg_commit(kiddo, patch)
-            case "checkout" =>
-                target := File new(popArg())
                 ver := popArg()
-                egg_checkout(target, ver)
+                kiddo := File new(popArg())
+                egg_commit(ver, kiddo)
+            case "checkout" =>
+                ver := popArg()
+                target := File new(popArg())
+                egg_checkout(ver, target)
             case "push" =>
                 egg_push()
             case =>
@@ -58,16 +58,24 @@ Eggplant: class {
 
     usage: func {
         match action {
+            // egg stuff
             case "diff" =>
                 "USAGE: eggplant diff OLDIE KIDDO PATCH.egg"
             case "check" =>
-                "USAGE: eggplant diff KIDDO PATCH.egg"
+                "USAGE: eggplant check KIDDO PATCH.egg"
             case "hone" =>
-                "USAGE: eggplant diff OLDIE PATCH.egg"
+                "USAGE: eggplant hone OLDIE PATCH.egg"
             case "patch" =>
-                "USAGE: eggplant diff OLDIE PATCH.egg"
+                "USAGE: eggplant patch OLDIE PATCH.egg"
             case "dump" =>
                 "USAGE: eggplant dump PATCH.egg"
+
+            // repo stuff
+            case "commit" =>
+                "USAGE: eggplant commit VERSION KIDDO"
+            case "checkout" =>
+                "USAGE: eggplant checkout VERSION TARGET"
+
             case =>
                 "USAGE: eggplant ACTION ARGS"
         } println()

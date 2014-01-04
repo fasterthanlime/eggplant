@@ -7,6 +7,9 @@ import yaml/[Document, Parser, Utils]
 import io/File
 import structs/[ArrayList]
 
+// ours
+import eggplant/[tree]
+
 /**
  * An eggplant repo
  */
@@ -37,6 +40,14 @@ Repo: class {
         list
     }
 
+    getLatest: func -> String {
+        vers := getVersions()
+        if (vers empty?()) {
+            return "null"
+        }
+        vers last()
+    }
+
     getChannels: func -> ArrayList<String> {
         list := ArrayList<String> new()
         index["channels"] each(|name, val|
@@ -47,6 +58,20 @@ Repo: class {
 
     channelVersion: func (chan: String) -> String {
         index["channels"][chan] _
+    }
+
+    eggFile: func (name: String) -> File {
+        File new(folder, "eggs/#{name}.egg")
+    }
+
+    store: func (tree: Tree) {
+        "Storing #{tree getPath()} in repo #{getName()}" println()
+        "stub" println()
+    }
+
+    addVersion: func (ver: String, upName, checkName: String) {
+        "Storing version #{ver} (upName #{upName}, checkName #{checkName}) in repo #{getName()}" println()
+        "stub" println()
     }
 
 }

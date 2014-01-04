@@ -5,7 +5,7 @@ import io/File
 // ours
 import eggplant/[egg, tree, buffer]
 
-egg_checkout: func (target: File, ver: String) {
-    "egg-checkout: stub!" println()
+egg_checkout: func (ver: String, target: File) {
+    "egg-checkout: stub! (#{ver} -> #{target path})" println()
 }
 
