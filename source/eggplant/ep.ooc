@@ -1,7 +1,7 @@
 
 // ours
 use eggplant
-import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush, eggnuke]
+import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush, eggnuke, eggsanity]
 
 // sdk
 import structs/[ArrayList]
@@ -65,6 +65,9 @@ Eggplant: class {
             case "push" =>
                 egg_push()
 
+            case "sanity" =>
+                egg_sanity()
+
             // help
 
             case "help" =>
@@ -104,6 +107,8 @@ Eggplant: class {
                 "USAGE: #{us} nuke VERSION"
             case "push" =>
                 "USAGE: #{us} push"
+            case "sanity" =>
+                "USAGE: #{us} sanity"
 
             // help
             case "help" =>
@@ -175,6 +180,7 @@ Eggplant: class {
                 " - #{us} nuke VERSION: remove all traces of a version from the repo" println()
                 " - #{us} checkout VERSION TARGET: reproduce the state of the repo at VERSION in TARGET directory" println()
                 " - #{us} push: push new objects and eggs to a remote warehouse" println()
+                " - #{us} sanity: check that a repo is healthy - all files are there, etc." println()
                 println()
                 "To get help about a specific command, do '#{us} help COMMAND'" println()
 
