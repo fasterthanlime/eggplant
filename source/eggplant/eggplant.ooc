@@ -1,7 +1,7 @@
 
 // ours
 use eggplant
-import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout]
+import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush]
 
 // sdk
 import structs/[ArrayList]
@@ -48,6 +48,8 @@ Eggplant: class {
                 target := File new(popArg())
                 ver := popArg()
                 egg_checkout(target, ver)
+            case "push" =>
+                egg_push()
             case =>
                 "Unknown action: #{action}" println()
                 exit(1)
