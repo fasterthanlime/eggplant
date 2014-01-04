@@ -169,7 +169,7 @@ Eggplant: class {
                 " - #{us} commit VERSION KIDDO: craft an .egg to update repo to KIDDO state & add the version to repo" println()
                 " - #{us} checkout VERSION TARGET: reproduce the state of the repo at VERSION in TARGET directory" println()
                 println()
-                "To get help abouat a specific command, do '#{us} help COMMAND'" println()
+                "To get help about a specific command, do '#{us} help COMMAND'" println()
 
             // general
             case =>
