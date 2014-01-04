@@ -12,7 +12,7 @@ Warehouse: class {
     base: File
 
     init: func {
-        base = File new(".")
+        base = File new(".") getAbsoluteFile()
 
         while (base != null && !base hasChild?("warehouse.yml")) {
             base = base parent
