@@ -16,7 +16,6 @@ import eggplant/[tree]
 Repo: class {
     folder: File
     index: MappingNode
-    doc: Document
 
     init: func (.folder) {
         this folder = folder getAbsoluteFile()
@@ -26,7 +25,7 @@ Repo: class {
         }
 
         parser := YAMLParser new(idxFile)
-        doc = parser parseDocument()
+        doc := parser parseDocument()
         index = doc getRootNode() asMap()
     }
 
@@ -79,13 +78,13 @@ Repo: class {
         "Storing version #{ver} (upName #{upName}, checkName #{checkName}) in repo #{getName()}" println()
 
         node := MappingNode new()
-        node put("upgrade", ScalarNode new(upName))
-        node put("check", ScalarNode new(checkName))
-        index["versions"] asMap() map put(ver, node)
+        node["upgrade"] = upName
+        node["check"] = checkName
+        index["versions"][ver] = node
 
         idx := getIndexFile()
         idxNew := File new(idx path + ".new")
-        doc write(idxNew)
+        index write(idxNew)
     }
 
 }
