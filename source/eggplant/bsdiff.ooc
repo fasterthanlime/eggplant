@@ -55,6 +55,7 @@ BSDiff: class {
 
         bspatch(oldp, oldsz, patchp, patchsz, newp, newsz)
 
+        olds free()
         news
     }
 

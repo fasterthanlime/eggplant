@@ -97,7 +97,6 @@ Repo: class {
         doSingle := func (path: String, sum: SHA1Sum) {
             obj := objFile(sum toString())
             dest := File new(target, path)
-            "Writing #{obj path} to #{dest path}" println()
 
             buf := EggBuffer new(obj)
             buf write(dest)

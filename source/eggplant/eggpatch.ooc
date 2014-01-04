@@ -66,15 +66,23 @@ egg_patch: func (oldie, patch: File) {
 
         news := BSDiff patch(n file, e diff)
         sum := SHA1 sum(news)
-        news free()
 
         if (sum equals?(e sum)) {
             news write(n file)
         } else {
-            "#{e path} modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
+            "#{e path} to be modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
+            errs += 1
+            continue
+        }
+        news free()
+
+        sum = SHA1 sum(n file)
+        if (!sum equals?(e sum)) {
+            "#{e path} was modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
             continue
         }
     }
     egg printStats()
+    "Done!" println()
 }

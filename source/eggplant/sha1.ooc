@@ -78,7 +78,16 @@ SHA1: class {
 
     sum: static func ~buf (buf: EggBuffer) -> SHA1Sum {
         m := SHA1Context new()
-        m update(buf data, buf size)
+        off: SizeT = 0
+
+        tmp := EggBuffer new(4096)
+        while (off < buf size) {
+            copied := buf copy(tmp, off)
+            m update(tmp data, copied)
+            off += copied
+        }
+        tmp free()
+
         m finish()
     }
 

@@ -21,10 +21,22 @@ EggBuffer: class {
         fR close()
     }
 
+    copy: func (dst: This, off: SizeT) -> SizeT {
+        diff := size - off
+        tocopy := match {
+            case (diff >= dst size) =>
+                dst size
+            case =>
+                diff
+        }
+        memcpy(dst data, data + off, tocopy)
+        tocopy
+    }
+
     write: func (file: File) {
         file parent mkdirs()
         fW := FileWriter new(file)
-        fW write(data, size)
+        written := fW write(data, size)
         fW close()
     }
 
@@ -34,6 +46,10 @@ EggBuffer: class {
 
     free: func {
         free(data)
+    }
+
+    toString: func -> String {
+        String new(data as CString, size)
     }
 }
 
