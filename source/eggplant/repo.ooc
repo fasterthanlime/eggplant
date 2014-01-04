@@ -20,8 +20,7 @@ Repo: class {
             bail("Not in an eggplant repo! (no index.yml) Bailing out.")
         }
 
-        parser := YAMLParser new()
-        parser setInputFile(idxFile)
+        parser := YAMLParser new(idxFile)
         doc := parser parseDocument()
         index = doc getRootNode() asMap()
     }
@@ -40,6 +39,10 @@ Repo: class {
             list add(name)
         )
         list
+    }
+
+    channelVersion: func (chan: String) -> String {
+        index["channels"][chan] _
     }
 
 }

@@ -11,11 +11,17 @@ import eggplant/[repo]
 
 egg_log: func {
     r := Repo new(File new(".") getAbsoluteFile())
-    vers := r getVersions()
+
+    "Channels: " println()
+
+    for (c in r getChannels()) {
+        v := r channelVersion(c)
+        "- #{v} (#{c} channel)" println()
+    }
 
     "Log: " println()
 
-    for (v in vers) {
-        "- Version #{v}" println()
+    for (v in r getVersions()) {
+        "- #{v}" println()
     }
 }
