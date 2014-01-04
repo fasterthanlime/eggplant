@@ -4,5 +4,5 @@ Description:
 SourcePath: source
 Requires: yaml
 Pkgs: bsdiff-1.0, sha1-1.0, liblzma
-Main: eggplant/eggplant
+Main: eggplant/ep
 
