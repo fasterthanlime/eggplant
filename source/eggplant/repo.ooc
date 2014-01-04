@@ -1,14 +1,11 @@
 
 // third
 use yaml
-import yaml/[Document, Parser]
+import yaml/[Document, Parser, Utils]
 
 // sdk
 import io/File
 import structs/[ArrayList]
-
-// ours
-import eggplant/yaml
 
 /**
  * An eggplant repo
