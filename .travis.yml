@@ -3,11 +3,14 @@ before_install:
   - sudo apt-get -y -qq install curl make libgc-dev
   - git clone --depth=1 git://github.com/nddrylliog/rock.git -b 99x
   - (cd rock && make -s rescue)
+  - export OOC_LIBS=$PWD
+  - git clone --depth=1 git://github.com/nddrylliog/ooc-yaml.git
   - export PATH=$PATH:$PWD/rock/bin
   - export PREFIX=$PWD/dummyprefix
   - export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
   - mkdir $PREFIX
   - wget http://tukaani.org/xz/xz-5.0.5.tar.xz -O - | tar xJ
+  - wget http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz -O - | tar xz
   - (cd libbsdiff && autoreconf -i -f)
   - (cd libsha1 && autoreconf -i -f)
   - mkdir dummybuild
@@ -16,8 +19,9 @@ before_install:
   - (cd dummybuild && ../libsha1/configure --prefix=$PREFIX && make && make install)
   - rm -rf dummybuild/*
   - (cd dummybuild && ../xz-*/configure --prefix=$PREFIX --disable-shared --enable-static && make && make install)
+  - rm -rf dummybuild/*
+  - (cd dummybuild && ../yaml-*/configure --prefix=$PREFIX --disable-shared --enable-static && make && make install)
 
 script:
-  - export OOC_LIBS=$PWD
   - rock -vv
 
