@@ -1,8 +1,4 @@
 
-// third
-use yaml
-import yaml/[Document, Parser]
-
 // sdk
 import io/File
 
@@ -13,16 +9,24 @@ egg_log: func {
     r := Repo new(File new(".") getAbsoluteFile())
 
     "[#{r getName()}]" println()
-    "Channels: " println()
 
-    for (c in r getChannels()) {
+    "Channels: " println()
+    chans := r getChannels()
+    if (chans empty?()) {
+        "(no channels)" println()
+    } else for (c in chans) {
         v := r channelVersion(c)
         "- #{v} (#{c} channel)" println()
     }
 
-    "Log: " println()
+    println()
 
-    for (v in r getVersions()) {
+    "Versions: " println()
+    vers := r getVersions()
+    if (vers empty?()) {
+        "(no versions)" println()
+    } else for (v in vers) {
         "- #{v}" println()
     }
 }
+

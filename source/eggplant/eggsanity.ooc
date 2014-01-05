@@ -47,6 +47,16 @@ egg_sanity: func {
         for (e in egg mod) { checkSingle(egg, e sum) }
     }
 
+    channels := repo getChannels()
+    for (c in channels) {
+        ver := repo channelVersion(c)
+        if (!vers contains?(ver)) {
+            "Channel #{c} is referring to non-existent version #{ver}" println()
+            errs += 1
+            continue
+        }
+    }
+
     if (errs > 0) {
         "#{errs} errors" println()
         exit(1)

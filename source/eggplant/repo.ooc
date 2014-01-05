@@ -54,6 +54,10 @@ Repo: class {
         index["channels"][chan] _
     }
 
+    hasVersion?: func (ver: String) {
+        getVersions() contains?(ver)
+    }
+
     versionEgg: func (ver, type: String) -> File {
         eggFile(index["versions"][ver][type] _)
     }
