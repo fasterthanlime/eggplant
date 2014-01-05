@@ -1,7 +1,8 @@
 
 // ours
 use eggplant
-import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush, eggnuke, eggsanity]
+import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone]
+import eggplant/[egglog, eggcommit, eggcheckout, eggpush, eggnuke, eggsanity, eggbump]
 import eggplant/[utils]
 
 // sdk
@@ -71,6 +72,11 @@ Eggplant: class {
 
             case "sanity" =>
                 egg_sanity()
+
+            case "bump" =>
+                channel := popArg()
+                ver := popArg("")
+                egg_bump(channel, ver)
 
             // help
 
@@ -161,6 +167,8 @@ Eggplant: class {
                 "USAGE: #{us} push"
             case "sanity" =>
                 "USAGE: #{us} sanity"
+            case "bump" =>
+                "USAGE: #{us} bump CHANNEL VERSION"
 
             // help
             case "help" =>
@@ -197,20 +205,34 @@ Eggplant: class {
             case "log" =>
                 "Lists all versions contained in a repo" println()
 
-            case "push" =>
-                "Push the contents of a warehouse to a remote location using" println()
-                "rsync and the settings located in warehouse.yml" println()
-
             case "commit" =>
                 "Builds an .egg that upgrades from the latest known" println()
                 "version of the repo we're in, to the state in the KIDDO" println()
                 "directory, then adds that version to the repo with both" println()
                 "the upgrade .egg (diffs) and a check .egg (only checksums)" println()
 
+            case "nuke" =>
+                "Completely remove a version from a given repo." println()
+                "That includes deleting the eggs and the entry in the index." println()
+
             case "checkout" =>
                 "Reproduces the content of the repo at a given version in" println()
                 "the target directory (created if non-existent). If the target" println()
                 "directory is not empty, no files are deleted." println()
+
+            case "push" =>
+                "Push the contents of a warehouse to a remote location using" println()
+                "rsync and the settings located in warehouse.yml" println()
+
+            case "sanity" =>
+                "Does a complete sanity check on a repo - for each version, check" println()
+                "that no eggs files are missing, for each check egg, check that" println()
+                "no referenced object is missing, and for each repo, verify that" println()
+                "each channel references an existing version." println()
+
+            case "bump" =>
+                "Tell a repo's channel to track a given version. If no version is given," println()
+                "the channel will track the latest version in the repo." println()
 
             case "commands" =>
                 println()
@@ -233,6 +255,7 @@ Eggplant: class {
                 " - #{us} checkout VERSION TARGET: reproduce the state of the repo at VERSION in TARGET directory" println()
                 " - #{us} push: push new objects and eggs to a remote warehouse" println()
                 " - #{us} sanity: check that a repo is healthy - all files are there, etc." println()
+                " - #{us} bump CHANNEL VERSION: set a channel to a given version" println()
                 println()
                 "To get help about a specific command, do '#{us} help COMMAND'" println()
 

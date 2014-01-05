@@ -19,6 +19,14 @@ egg_nuke: func (ver: String) {
         bail("Can't nuke version #{ver} as it would break upgrade path. Latest is #{latest}.")
     }
 
+    chans := repo getChannels()
+    for (c in chans) {
+        cver := repo channelVersion(c)
+        if (cver == ver) {
+            bail("Can't nuke version #{ver}, it's used by channel #{c}")
+        }
+    }
+
     up := repo versionEgg(ver, "upgrade")
     ck := repo versionEgg(ver, "check")
 

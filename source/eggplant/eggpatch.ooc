@@ -41,11 +41,18 @@ egg_patch: func (oldie, patch: File) {
             errs += 1
             continue
         }
+
+        if (e executable?() != n file executable?()) {
+            n file setExecutable(e executable?())
+        }
     }
 
     for (e in egg add) {
         target := File new(ot file, e path)
         e buffer write(target)
+        if (e executable?()) {
+            target setExecutable(true)
+        }
 
         sum := SHA1 sum(target)
         if (!sum equals?(e sum)) {
@@ -69,6 +76,7 @@ egg_patch: func (oldie, patch: File) {
 
         if (sum equals?(e sum)) {
             news write(n file)
+            n file setExecutable(e executable?())
         } else {
             "#{e path} to be modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1

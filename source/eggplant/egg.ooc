@@ -100,14 +100,14 @@ EggMagic: enum from UInt8 {
 }
 
 EggFlags: enum from UInt8 {
-    EXC = 0x01
-    UK2 = 0x02
-    UK3 = 0x04
-    UK4 = 0x08
-    UK5 = 0x10
-    UK6 = 0x20
-    UK7 = 0x40
-    UK8 = 0x80
+    EXC = 0x01 // file is executable
+    UK2 = 0x02 // reserved
+    UK3 = 0x04 // reserved
+    UK4 = 0x08 // reserved
+    UK5 = 0x10 // reserved
+    UK6 = 0x20 // reserved
+    UK7 = 0x40 // reserved
+    UK8 = 0x80 // reserved
 }
 
 EggNode: abstract class {
@@ -124,6 +124,10 @@ EggFileNode: abstract class extends EggNode {
 
     init: func (.path, =flags, =sum) {
         super(path)
+    }
+
+    executable?: func -> Bool {
+        (flags & EggFlags EXC) != 0
     }
 }
 

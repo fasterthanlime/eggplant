@@ -54,7 +54,12 @@ Repo: class {
         index["channels"][chan] _
     }
 
-    hasVersion?: func (ver: String) {
+    setChannelVersion: func (chan, ver: String) -> String {
+        index["channels"][chan] = ver
+        saveAndRefresh()
+    }
+
+    hasVersion?: func (ver: String) -> Bool {
         getVersions() contains?(ver)
     }
 
@@ -96,18 +101,21 @@ Repo: class {
     }
 
     checkout: func (egg: Egg, target: File) {
-        doSingle := func (path: String, sum: SHA1Sum) {
-            obj := objFile(sum toString())
-            dest := File new(target, path)
+        doSingle := func (e: EggFileNode) {
+            obj := objFile(e sum toString())
+            dest := File new(target, e path)
 
             buf := EggBuffer new(obj)
             buf write(dest)
             buf free()
+            if (e executable?()) {
+                dest setExecutable(true)
+            }
         }
 
-        for (e in egg equ) { doSingle(e path, e sum) }
-        for (e in egg add) { doSingle(e path, e sum) }
-        for (e in egg mod) { doSingle(e path, e sum) }
+        for (e in egg equ) { doSingle(e) }
+        for (e in egg add) { doSingle(e) }
+        for (e in egg mod) { doSingle(e) }
     }
 
     addVersion: func (ver: String, upName, checkName: String) {
@@ -115,7 +123,6 @@ Repo: class {
         node["upgrade"] = upName
         node["check"] = checkName
         index["versions"][ver] = node
-
         saveAndRefresh()
     }
 
