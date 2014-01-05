@@ -3,7 +3,7 @@
 import io/File
 
 // ours
-import eggplant/[size, tree, egg, bsdiff, sha1, buffer]
+import eggplant/[size, tree, egg, bsdiff, sha1, buffer, utils]
 
 egg_diff: func (oldie, kiddo, patch: File) {
     ot := Tree new(oldie)
@@ -34,7 +34,7 @@ Differ: class {
                 "Modified: #{k path}" println()
                 diff := BSDiff diff(o file, k file)
                 sum := SHA1 sum(k file)
-                egg mod add(EggDiff new(k path, diff, sum))
+                egg mod add(EggMod new(k path, k file eggFlags(), sum, diff))
             } else {
                 egg equ add(EggEqu new(k path, k sum))
             }
@@ -45,7 +45,7 @@ Differ: class {
             if (!o) {
                 buffer := EggBuffer new(k file)
                 sum := SHA1 sum(k file)
-                egg add add(EggData new(k path, buffer, sum))
+                egg add add(EggAdd new(k path, k file eggFlags(), sum, buffer))
             }
         )
 

@@ -15,10 +15,10 @@ egg_dump: func (patch: File) {
         "#{e path} equ, sha1 = #{e sum}" println()
     }
     for (e in egg add) {
-        "#{e path} added, sha1 = #{e sum}, #{e buffer size} bytes" println()
+        "#{e path} added, sha1 = #{e sum}, #{e buffer size} bytes, #{e flags} flags" println()
     }
     for (e in egg mod) {
-        "#{e path} modded, sha1 = #{e sum}, #{e diff size} bytes diff" println()
+        "#{e path} modded, sha1 = #{e sum}, #{e diff size} bytes diff, #{e flags} flags" println()
     }
 
     egg printStats()

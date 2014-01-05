@@ -1,6 +1,10 @@
 
+// sdk
 import io/File
 import os/Time
+
+// ours
+import  eggplant/egg
 
 extend File {
 
@@ -14,6 +18,14 @@ extend File {
 
     hasChild?: func (name: String) -> Bool {
         File new(this, name) exists?()
+    }
+
+    eggFlags: func -> UInt8 {
+        flags := 0x0
+        if (executable?()) {
+            flags |= EggFlags EXC
+        }
+        flags
     }
 
 }
