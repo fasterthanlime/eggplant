@@ -152,7 +152,7 @@ EggFileBufferNode: abstract class extends EggFileNode {
     }
 
     write: func ~withMagic (w: EggWriter, magic: UInt8) {
-        w writeMagic(EggMagic ADD)
+        w writeMagic(magic)
         w writeString(path)
 
         w writeMagic(EggMagic FLG)
@@ -190,7 +190,7 @@ EggMod: class extends EggFileBufferNode {
     }
 
     write: func (w: EggWriter) {
-        write(w, EggMagic ADD)
+        write(w, EggMagic MOD)
     }
 }
 
