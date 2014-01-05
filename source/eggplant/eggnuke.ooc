@@ -14,12 +14,15 @@ egg_nuke: func (ver: String) {
         bail("Unknown version #{ver} in repo #{repo getName()}")
     }
 
+    latest := repo getLatest()
+    if (ver != latest) {
+        bail("Can't nuke version #{ver} as it would break upgrade path. Latest is #{latest}.")
+    }
+
     up := repo versionEgg(ver, "upgrade")
     ck := repo versionEgg(ver, "check")
 
-    "This will remove all traces of version #{ver} from repo #{repo getName()}" println()
-    "This will delete the file #{up path}" println()
-    "This will delete the file #{ck path}" println()
+    "This will completely remove version #{ver} from repo #{repo getName()}" println()
     if (!confirm()) {
         bail("Aborted by user demand.")
     }
