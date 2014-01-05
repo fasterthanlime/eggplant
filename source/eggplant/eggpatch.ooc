@@ -76,13 +76,19 @@ egg_patch: func (oldie, patch: File) {
 
         if (sum equals?(e sum)) {
             news write(n file)
+            news free()
             n file setExecutable(e executable?())
         } else {
-            "#{e path} to be modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
-            errs += 1
-            continue
+            news free()
+            if (SHA1 sum(n file) equals?(e sum)) {
+                "#{e path} was already modded?" println()
+                continue
+            } else {
+                "#{e path} to be modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
+                errs += 1
+                continue
+            }
         }
-        news free()
 
         sum = SHA1 sum(n file)
         if (!sum equals?(e sum)) {
@@ -92,5 +98,9 @@ egg_patch: func (oldie, patch: File) {
         }
     }
     egg printStats()
+    if (errs > 0) {
+        "Had #{errs} oddities." println()
+    }
+
     "Done!" println()
 }

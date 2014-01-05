@@ -32,7 +32,6 @@ Differ: class {
             if (!k) {
                 egg del add(EggDel new(o path))
             } else if (!k sum equals?(o sum)) {
-                "Modified: #{k path}" println()
                 diff := BSDiff diff(o file, k file)
                 sum := SHA1 sum(k file)
                 egg mod add(EggMod new(k path, k file eggFlags(), sum, diff))
