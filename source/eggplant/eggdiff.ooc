@@ -36,7 +36,7 @@ Differ: class {
                 sum := SHA1 sum(k file)
                 egg mod add(EggMod new(k path, k file eggFlags(), sum, diff))
             } else {
-                egg equ add(EggEqu new(k path, k sum))
+                egg equ add(EggEqu new(k path, k file eggFlags(), k sum))
             }
         )
 

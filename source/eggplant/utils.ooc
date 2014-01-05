@@ -35,15 +35,21 @@ bail: func (msg: String) {
     exit(1)
 }
 
-thinkingTime: func {
-    timeout := 5
-    "Giving you #{timeout} secs to change your mind... (Hit Ctrl-C to abort)" println()
+ASK_QUESTIONS := true
 
-    while (timeout > 0) {
-        "#{timeout}..." println()
-        Time sleepSec(1)
-        timeout -= 1
+confirm: func -> Bool {
+    if (!ASK_QUESTIONS) {
+        "Have no questions, continuing..." println()
+        return true
     }
-    "There we go." println()
+
+    "Are you sure you want to go ahead? [y/N]" println()
+    c := stdin readChar()
+    match (c toLower()) {
+        case 'y' =>
+            true
+        case =>
+            false
+    }
 }
 

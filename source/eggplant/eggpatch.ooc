@@ -64,7 +64,7 @@ egg_patch: func (oldie, patch: File) {
             continue
         }
 
-        news := BSDiff patch(n file, e diff)
+        news := BSDiff patch(n file, e buffer)
         sum := SHA1 sum(news)
 
         if (sum equals?(e sum)) {

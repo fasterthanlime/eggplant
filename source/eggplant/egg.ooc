@@ -116,6 +116,8 @@ EggNode: abstract class {
     path: String
 
     init: func (=path)
+
+    write: abstract func (w: EggWriter)
 }
 
 EggFileNode: abstract class extends EggNode {
@@ -127,10 +129,10 @@ EggFileNode: abstract class extends EggNode {
     }
 }
 
-EggAdd: class extends EggFileNode {
+EggFileBufferNode: abstract class extends EggFileNode {
     buffer: EggBuffer
 
-    init: func ~cons (.path, .flags, .sum, =buffer) {
+    init: func (.path, .flags, .sum, =buffer) {
         super(path, flags, sum)
     }
 
@@ -147,7 +149,7 @@ EggAdd: class extends EggFileNode {
         sum = SHA1Sum new(r readBuffer())
     }
 
-    write: func (w: EggWriter) {
+    write: func ~withMagic (w: EggWriter, magic: UInt8) {
         w writeMagic(EggMagic ADD)
         w writeString(path)
 
@@ -162,43 +164,35 @@ EggAdd: class extends EggFileNode {
     }
 }
 
-EggMod: class extends EggFileNode {
-    diff: EggBuffer
-
-    init: func ~cons (.path, .flags, .sum, =diff) {
-        super(path, flags, sum)
+EggAdd: class extends EggFileBufferNode {
+    init: func ~cons (.path, .flags, .sum, .buffer) {
+        super(path, flags, sum, buffer)
     }
 
     init: func ~read (r: EggReader) {
-        path = r readString()
-
-        r checkMagic(EggMagic FLG)
-        flags = r readFlags()
-
-        r checkMagic(EggMagic DAT)
-        diff = r readBuffer()
-
-        r checkMagic(EggMagic SHA)
-        sum = SHA1Sum new(r readBuffer())
+        super(r)
     }
 
     write: func (w: EggWriter) {
-        w writeMagic(EggMagic MOD)
-        w writeString(path)
+        write(w, EggMagic ADD)
+    }
+}
 
-        w writeMagic(EggMagic FLG)
-        w writeFlags(flags)
+EggMod: class extends EggFileBufferNode {
+    init: func ~cons (.path, .flags, .sum, .buffer) {
+        super(path, flags, sum, buffer)
+    }
 
-        w writeMagic(EggMagic DAT)
-        w writeBytes(diff data, diff size)
+    init: func ~read (r: EggReader) {
+        super(r)
+    }
 
-        w writeMagic(EggMagic SHA)
-        w writeBytes(sum data, sum size)
+    write: func (w: EggWriter) {
+        write(w, EggMagic ADD)
     }
 }
 
 EggDel: class extends EggNode {
-
     init: func ~cons (.path) {
         super(path)
     }
@@ -213,14 +207,16 @@ EggDel: class extends EggNode {
     }
 }
 
-EggEqu: class {
-    path: String
-    sum: SHA1Sum
-
-    init: func ~cons (=path, =sum)
+EggEqu: class extends EggFileNode {
+    init: func ~cons (.path, .flags, .sum) {
+        super(path, flags, sum)
+    }
 
     init: func ~read (r: EggReader) {
         path = r readString()
+
+        r checkMagic(EggMagic FLG)
+        flags = r readFlags()
 
         r checkMagic(EggMagic SHA)
         sum = SHA1Sum new(r readBuffer())
@@ -229,6 +225,9 @@ EggEqu: class {
     write: func (w: EggWriter) {
         w writeMagic(EggMagic EQU)
         w writeString(path)
+
+        w writeMagic(EggMagic FLG)
+        w writeFlags(flags)
 
         w writeMagic(EggMagic SHA)
         w writeBytes(sum data, sum size)

@@ -22,7 +22,9 @@ egg_push: func {
     "Will push #{w base path}, launching the following command:" println()
     "> #{args join(" ")}" println()
 
-    thinkingTime()
+    if (!confirm()) {
+        bail("Aborted by user demand.")
+    }
 
     p := Process new(args)
     p setCwd(w base path)

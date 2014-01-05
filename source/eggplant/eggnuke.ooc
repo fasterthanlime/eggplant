@@ -20,7 +20,9 @@ egg_nuke: func (ver: String) {
     "This will remove all traces of version #{ver} from repo #{repo getName()}" println()
     "This will delete the file #{up path}" println()
     "This will delete the file #{ck path}" println()
-    thinkingTime()
+    if (!confirm()) {
+        bail("Aborted by user demand.")
+    }
 
     up rm()
     ck rm()

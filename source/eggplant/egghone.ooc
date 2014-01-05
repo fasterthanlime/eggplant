@@ -58,7 +58,7 @@ egg_hone: func (oldie, patch: File) {
             continue
         }
 
-        news := BSDiff patch(n file, e diff)
+        news := BSDiff patch(n file, e buffer)
         sum := SHA1 sum(news)
         news free()
 
