@@ -70,8 +70,6 @@ Repo: class {
     }
 
     store: func (tree: Tree) {
-        "Storing #{tree getPath()} in repo #{getName()}" println()
-
         tree nodes each(|path, node|
             dest := objFile(node sum toString())
 
@@ -109,8 +107,6 @@ Repo: class {
     }
 
     addVersion: func (ver: String, upName, checkName: String) {
-        "Storing version #{ver} (upName #{upName}, checkName #{checkName}) in repo #{getName()}" println()
-
         node := MappingNode new()
         node["upgrade"] = upName
         node["check"] = checkName

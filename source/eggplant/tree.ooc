@@ -18,8 +18,6 @@ Tree: class {
                 true
             )
         }
-
-        "For tree #{getPath()}, got #{nodes size} nodes" println()
     }
 
     getPath: func -> String {

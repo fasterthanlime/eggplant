@@ -4,46 +4,49 @@ import io/File
 import math/Random
 
 // ours
-import eggplant/[egg, tree, buffer, repo]
+import eggplant/[egg, tree, buffer, repo, utils]
 import eggplant/[eggdiff, eggcheckout]
 
 egg_commit: func (ver: String, kiddo: File) {
     repo := Repo new(File new("."))
     latest := repo getLatest()
 
-    errs := 0
+    vers := repo getVersions()
+    if (vers contains?(ver)) {
+        bail("Can't commit version #{ver} as it already exists!")
+    }
 
+    "Committing #{ver} as current state of #{kiddo path}" println()
+
+    // explore new version directory
     kt := Tree new(kiddo)
 
+    // check out old version in temp directory
     oldie := tmpdir()
     if (latest != "null") {
-        egg_checkout(latest, oldie)
+        // null is a special bootstrap case - otherwise
+        egg_checkout_silent(latest, oldie)
     }
     ot := Tree new(oldie)
 
+    // build upgrade egg
     upgrade := repo eggFile("#{latest}-to-#{ver}.egg")
-    "Writing ugprade egg to #{upgrade}" println()
     egg_tree_diff(ot, kt, upgrade)
 
-    check := repo eggFile("#{ver}.egg")
-    "Writing ugprade egg to #{check}" println()
-    egg_tree_diff(kt, kt, check)
-
-    "Storing objects in repo #{repo getName()}" println()
-    repo store(kt)
-
-    "Adding versions to repo #{repo getName()}" println()
-    repo addVersion(ver, upgrade getName(), check getName())
-
-    "Removing oldie tmp dir" println()
+    // remove old, temporary directory
     oldie rm_rf()
 
-    if (errs > 0) {
-        "#{errs} errors" println()
-        exit(1)
-    } else {
-        "no errors" println()
-    }
+    // build check egg
+    check := repo eggFile("#{ver}.egg")
+    egg_tree_diff(kt, kt, check)
+
+    // store objects
+    repo store(kt)
+
+    // store version with egg paths
+    repo addVersion(ver, upgrade getName(), check getName())
+
+    "Version #{ver} was stored successfully." println()
 }
 
 tmpdir: func -> File {

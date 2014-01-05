@@ -20,7 +20,6 @@ Egg: class {
 
     init: func ~load (=file) {
         tmp := File new(file path + ".raw")
-        "Decompressing from #{file path}..." println()
         XZ decompress(file, tmp)
 
         r := EggReader new(tmp)
@@ -65,7 +64,6 @@ Egg: class {
         }
         w close()
 
-        "Compressing to #{file path}..." println()
         XZ compress(raw, file)
         raw rm()
     }

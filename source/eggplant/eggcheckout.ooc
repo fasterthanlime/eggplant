@@ -6,6 +6,11 @@ import io/File
 import eggplant/[egg, tree, buffer, repo, utils]
 
 egg_checkout: func (ver: String, target: File) {
+    egg := egg_checkout_silent(ver, target)
+    "Done! #{egg nodeCount()} files created." println()
+}
+
+egg_checkout_silent: func (ver: String, target: File) -> Egg {
     repo := Repo new(File new("."))
 
     vers := repo getVersions()
@@ -16,6 +21,6 @@ egg_checkout: func (ver: String, target: File) {
     ck := repo versionEgg(ver, "check")
     egg := Egg new(ck)
     repo checkout(egg, target)
-    "Done! #{egg nodeCount()} files created." println()
+    egg
 }
 

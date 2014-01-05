@@ -6,9 +6,13 @@ import os/[Process]
 
 // ours
 import eggplant/[warehouse, utils]
+import eggplant/[eggsanity]
 
 egg_push: func {
     w := Warehouse new()
+
+    "Doing a sanity check first..." println()
+    egg_sanity()
 
     args := ArrayList<String> new()
     args add("rsync")

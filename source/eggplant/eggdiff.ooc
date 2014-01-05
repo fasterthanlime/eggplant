@@ -15,6 +15,7 @@ egg_tree_diff: func (ot, kt: Tree, patch: File) -> Egg {
     d := Differ new(ot, kt)
     egg := d egg()
     egg write(patch)
+    egg printStats()
     egg
 }
 
@@ -49,7 +50,6 @@ Differ: class {
             }
         )
 
-        egg printStats()
         egg
     }
 }
