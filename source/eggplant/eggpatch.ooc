@@ -3,11 +3,13 @@
 import io/File
 
 // ours
-import eggplant/[egg, tree, bsdiff, sha1, buffer]
+import eggplant/[egg, tree, bsdiff, sha1, buffer, faillog]
 
 egg_patch: func (oldie, patch: File) {
     ot := Tree new(oldie)
     egg := Egg new(patch)
+
+    log := FailLog new()
 
     errs := 0
 
@@ -39,6 +41,7 @@ egg_patch: func (oldie, patch: File) {
         if (!sum equals?(e sum)) {
             "#{e path} equ but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
+            log add(e path, e flags, e sum)
             continue
         }
 
@@ -58,6 +61,7 @@ egg_patch: func (oldie, patch: File) {
         if (!sum equals?(e sum)) {
             "#{e path} added but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
+            log add(e path, e flags, e sum)
             continue
         }
     }
@@ -68,6 +72,7 @@ egg_patch: func (oldie, patch: File) {
         if (!n) {
             "#{e path} should be there so we can mod it" println()
             errs += 1
+            log add(e path, e flags, e sum)
             continue
         }
 
@@ -86,6 +91,7 @@ egg_patch: func (oldie, patch: File) {
             } else {
                 "#{e path} to be modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
                 errs += 1
+                log add(e path, e flags, e sum)
                 continue
             }
         }
@@ -94,6 +100,7 @@ egg_patch: func (oldie, patch: File) {
         if (!sum equals?(e sum)) {
             "#{e path} was modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
+            log add(e path, e flags, e sum)
             continue
         }
     }
@@ -101,6 +108,8 @@ egg_patch: func (oldie, patch: File) {
     if (errs > 0) {
         "Had #{errs} oddities." println()
     }
+
+    log write()
 
     "Done!" println()
 }

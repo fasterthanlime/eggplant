@@ -1,7 +1,6 @@
 
 // sdk
 import io/File
-import math/Random
 
 // ours
 import eggplant/[egg, tree, buffer, repo, utils]
@@ -22,7 +21,7 @@ egg_commit: func (ver: String, kiddo: File) {
     kt := Tree new(kiddo)
 
     // check out old version in temp directory
-    oldie := tmpdir()
+    oldie := File tmpdir("checkout")
     if (latest != "null") {
         // null is a special bootstrap case - otherwise
         egg_checkout_silent(latest, oldie)
@@ -47,11 +46,5 @@ egg_commit: func (ver: String, kiddo: File) {
     repo addVersion(ver, upgrade getName(), check getName())
 
     "Version #{ver} was stored successfully." println()
-}
-
-tmpdir: func -> File {
-    f := File new("./tmp-checkout-#{Random randInt(100000, 999999)}")
-    f mkdirs()
-    f
 }
 

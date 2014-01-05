@@ -2,6 +2,7 @@
 // sdk
 import io/File
 import os/Time
+import math/Random
 
 // ours
 import  eggplant/egg
@@ -26,6 +27,16 @@ extend File {
             flags |= EggFlags EXC
         }
         flags
+    }
+
+    tmpdir: static func (affix: String) -> This {
+        f := This tmpfile(affix)
+        f mkdirs()
+        f
+    }
+
+    tmpfile: static func (affix: String) -> This {
+        new("tmp-#{affix}-#{Random randInt(100000, 999999)}")
     }
 
 }

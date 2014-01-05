@@ -3,11 +3,13 @@
 import io/File
 
 // ours
-import eggplant/[egg, tree, buffer]
+import eggplant/[egg, tree, buffer, faillog]
 
 egg_check: func (kiddo, patch: File) {
     kt := Tree new(kiddo)
     egg := Egg new(patch)
+
+    log := FailLog new()
 
     errs := 0
 
@@ -22,12 +24,14 @@ egg_check: func (kiddo, patch: File) {
         n := kt nodes get(e path)
         if (!n) {
             errs += 1
+            log add(e path, e flags, e sum)
             "#{e path} should be there" println()
             continue
         }
 
         if (!n sum equals?(e sum)) {
             errs += 1
+            log add(e path, e flags, e sum)
             "#{e path} sha1 mismatch, expected: #{e sum}, got #{n sum}" println()
         }
     }
@@ -36,12 +40,14 @@ egg_check: func (kiddo, patch: File) {
         n := kt nodes get(e path)
         if (!n) {
             errs += 1
+            log add(e path, e flags, e sum)
             "#{e path} should be there" println()
             continue
         }
 
         if (!n sum equals?(e sum)) {
             errs += 1
+            log add(e path, e flags, e sum)
             "#{e path} sha1 mismatch, expected: #{e sum}, got #{n sum}" println()
         }
     }
@@ -50,17 +56,21 @@ egg_check: func (kiddo, patch: File) {
         n := kt nodes get(e path)
         if (!n) {
             errs += 1
+            log add(e path, e flags, e sum)
             "#{e path} should be there" println()
             continue
         }
 
         if (!n sum equals?(e sum)) {
             errs += 1
+            log add(e path, e flags, e sum)
             "#{e path} sha1 mismatch, expected: #{e sum}, got #{n sum}" println()
         }
     }
 
     egg printStats()
+
+    log write()
 
     if (errs > 0) {
         "#{errs} errors" println()
