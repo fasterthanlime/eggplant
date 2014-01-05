@@ -2,9 +2,10 @@
 // ours
 use eggplant
 import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone, egglog, eggcommit, eggcheckout, eggpush, eggnuke, eggsanity]
+import eggplant/[utils]
 
 // sdk
-import structs/[ArrayList]
+import structs/[ArrayList, HashMap]
 import io/[File]
 
 Eggplant: class {
@@ -12,8 +13,11 @@ Eggplant: class {
     us := "ep"
     action := "none"
     args: ArrayList<String>
+    options := HashMap<String, String> new()
 
     init: func (=args) {
+        processOptions()
+
         us = popArg() // executable path ($0)
         action = popArg()
 
@@ -80,6 +84,54 @@ Eggplant: class {
                 "Unknown action: #{action}" println()
                 exit(1)
         }
+    }
+
+    processOptions: func {
+        flags := ArrayList<String> new()
+
+        // extract options & flags
+        iter := args iterator()
+        while (iter hasNext?()) {
+            arg := iter next()
+            if (arg startsWith?("--")) {
+                iter remove()
+                key := arg
+                idx := arg indexOf("=")
+                val := match idx {
+                    case -1 =>
+                        key = arg[2..-1]
+                        ""
+                    case =>
+                        key = arg[2..idx]
+                        arg[idx + 1..-1]
+                }
+                options put(key, val)
+            } else if (arg startsWith?("-")) {
+                iter remove()
+                flags add(arg[1..-1])
+            }
+        }
+
+        // interpret flags
+        flags each(|flag|
+            match flag {
+                case "y" =>
+                    options put("assume-yes", "")
+                case =>
+                    bail("Unknown flag: '-#{flag}', bailing out.")
+            }
+        )
+        // we've interpreted them all or bailed
+        flags clear()
+
+        // interpret options
+        options each(|key, val|
+            match key {
+                case "yes" || "assume-yes" =>
+                    // for utils/confirm
+                    ASK_QUESTIONS = false
+            }
+        )
     }
 
     usage: func {
