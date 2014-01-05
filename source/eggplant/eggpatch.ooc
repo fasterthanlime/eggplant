@@ -111,5 +111,10 @@ egg_patch: func (oldie, patch: File) {
 
     log write()
 
-    "Done!" println()
+    if (errs > 0) {
+        "#{errs} errors" println()
+        exit(1)
+    } else {
+        "no errors" println()
+    }
 }
