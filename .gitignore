@@ -2,6 +2,7 @@
 .sam-cache
 rock_tmp
 
+/build
 /ep
 *.exe
 *.egg
