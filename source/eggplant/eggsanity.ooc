@@ -7,8 +7,11 @@ import structs/HashMap
 import eggplant/[egg, tree, buffer, repo, utils, sha1]
 
 egg_sanity: func {
-    repo := Repo new(File new("."))
+    egg_sanity_for(File new("."))
+}
 
+egg_sanity_for: func (file: File) {
+    repo := Repo new(file)
     errs := 0
     vers := repo getVersions()
     missings := HashMap<String, String> new()

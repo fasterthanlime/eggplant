@@ -47,6 +47,19 @@ Warehouse: class {
         war["path"] _
     }
 
+    getRepos: func -> ArrayList<File> {
+        repos := ArrayList<File> new()
+        children := base getChildren()
+        for (c in children) {
+            if (!c dir?()) continue
+            idx := File new(c, "index.yml")
+            if (idx exists?()) {
+                repos add(c)
+            }
+        }
+        repos
+    }
+
     getUrl: func -> String {
         "#{getUser()}@#{getHost()}:#{getPath()}"
     }

@@ -11,8 +11,12 @@ import eggplant/[eggsanity]
 egg_push: func {
     w := Warehouse new()
 
-    "Doing a sanity check first..." println()
-    egg_sanity()
+    "Doing a few sanity checks first..." println()
+    repos := w getRepos()
+    for (r in repos) {
+        "#{r name}... " print()
+        egg_sanity_for(r)
+    }
 
     args := ArrayList<String> new()
     args add("rsync")
