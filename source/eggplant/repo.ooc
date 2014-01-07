@@ -8,7 +8,7 @@ import io/File
 import structs/[ArrayList]
 
 // ours
-import eggplant/[tree, utils, buffer, sha1, egg]
+import eggplant/[tree, utils, buffer, sha1, egg, xz]
 
 /**
  * An eggplant repo
@@ -74,17 +74,20 @@ Repo: class {
     objFile: func (sum: String) -> File {
         prefix1 := sum[0..1]
         prefix2 := sum[1..2]
-        full := "objects/#{prefix1}/#{prefix2}/#{sum}"
+        full := "objects/#{prefix1}/#{prefix2}/#{sum}.xz"
         File new(folder, full)
     }
 
     store: func (tree: Tree) {
         tree nodes each(|path, node|
             dest := objFile(node sum toString())
+            raw := File new(dest path + ".raw")
 
             if (dest exists?()) {
                 // Already have it. Joy! Check it again just in case.
-                exsum := SHA1 sum(dest)
+                XZ decompress(dest, raw)
+                exsum := SHA1 sum(raw)
+                raw rm()
                 if (!exsum equals?(node sum)) {
                     // rewrite it then
                     "#{dest path} was corrupted, rewriting" println()
@@ -94,8 +97,10 @@ Repo: class {
             
             if (!dest exists?()) {
                 buf := EggBuffer new(node file)
-                buf write(dest)
+                buf write(raw)
                 buf free()
+                XZ compress(raw, dest)
+                raw rm()
             }
         )
     }
@@ -105,9 +110,7 @@ Repo: class {
             obj := objFile(e sum toString())
             dest := File new(target, e path)
 
-            buf := EggBuffer new(obj)
-            buf write(dest)
-            buf free()
+            XZ decompress(obj, dest)
             if (e executable?()) {
                 dest setExecutable(true)
             }
