@@ -3,7 +3,7 @@
 use eggplant
 import eggplant/[eggdiff, eggpatch, eggcheck, eggdump, egghone]
 import eggplant/[egglog, eggcommit, eggcheckout, eggpush, eggnuke, eggsanity, eggbump]
-import eggplant/[utils]
+import eggplant/[utils, xz]
 
 // sdk
 import structs/[ArrayList, HashMap]
@@ -23,6 +23,8 @@ Eggplant: class {
         action = popArg()
 
         match action {
+            // egg methods
+
             case "diff" =>
                 oldie := File new(popArg())
                 kiddo := File new(popArg())
@@ -47,6 +49,12 @@ Eggplant: class {
             case "dump" =>
                 patch := File new(popArg())
                 egg_dump(patch)
+
+            case "extract" =>
+                src := File new(popArg())
+                dst := File new(popArg())
+                dst parent mkdirs()
+                XZ decompress(src, dst)
 
             // repo methods
 
@@ -153,6 +161,8 @@ Eggplant: class {
                 "USAGE: #{us} patch OLDIE PATCH.egg"
             case "dump" =>
                 "USAGE: #{us} dump PATCH.egg"
+            case "extract" =>
+                "USAGE: #{us} extract SOURCE.xz DESTINATION"
 
             // repo stuff
             case "log" =>
@@ -201,6 +211,9 @@ Eggplant: class {
             case "dump" =>
                 "Shows the contents of PATCH.egg (paths and checksums)" println()
 
+            case "extract" =>
+                "Extract an XZ-compressed file to a given destination" println()
+
             // repo stuff
             case "log" =>
                 "Lists all versions contained in a repo" println()
@@ -244,6 +257,7 @@ Eggplant: class {
                 " - #{us} hone OLDIE PATCH.egg: check that PATCH.egg applies cleanly to OLDIE" println()
                 " - #{us} patch OLDIE PATCH.egg: patch the OLDIE directory with the diff in PATCH.egg" println()
                 " - #{us} dump PATCH.egg: dump the contents (paths + checksums) of PATCH.egg" println()
+                " - #{us} extract SOURCE.xz DESTINATION: extract an XZ archive to file DESTINATION" println()
 
                 println()
                 "Repo commands (high-level interface)" println()
