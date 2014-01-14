@@ -122,6 +122,9 @@ XZ: class {
         stream avail_out = outbuf size
 
         fR := FileReader new(src)
+        if (!dst parent exists?()) {
+            dst parent mkdirs()
+        }
         fW := FileWriter new(dst)
 
         while (true) {
