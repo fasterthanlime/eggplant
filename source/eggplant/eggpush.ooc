@@ -25,6 +25,8 @@ egg_push: func {
     args add("--progress")
     args add("--human-readable")
     args add("--rsh=ssh")
+    args add("--exclude")
+    args add(".git")
     args add(".") // src
     args add(w getUrl()) // dst
     "Will push #{w base path}, launching the following command:" println()
