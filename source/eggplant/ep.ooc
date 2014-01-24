@@ -16,6 +16,8 @@ Eggplant: class {
     args: ArrayList<String>
     options := HashMap<String, String> new()
 
+    VERSION := "2.0.0"
+
     init: func (=args) {
         processOptions()
 
@@ -149,6 +151,8 @@ Eggplant: class {
     }
 
     usage: func {
+        "ep version #{VERSION}" println()
+
         match action {
             // egg stuff
             case "diff" =>

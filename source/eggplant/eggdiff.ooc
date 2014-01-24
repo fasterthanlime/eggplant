@@ -34,9 +34,9 @@ Differ: class {
             } else if (!k sum equals?(o sum)) {
                 diff := BSDiff diff(o file, k file)
                 sum := SHA1 sum(k file)
-                egg mod add(EggMod new(k path, k file eggFlags(), sum, diff))
+                egg mod add(EggMod new(k path, k file eggFlags(), sum, k file getSize(), diff))
             } else {
-                egg equ add(EggEqu new(k path, k file eggFlags(), k sum))
+                egg equ add(EggEqu new(k path, k file eggFlags(), k sum, k file getSize()))
             }
         )
 
@@ -45,7 +45,7 @@ Differ: class {
             if (!o) {
                 buffer := EggBuffer new(k file)
                 sum := SHA1 sum(k file)
-                egg add add(EggAdd new(k path, k file eggFlags(), sum, buffer))
+                egg add add(EggAdd new(k path, k file eggFlags(), sum, k file getSize(), buffer))
             }
         )
 

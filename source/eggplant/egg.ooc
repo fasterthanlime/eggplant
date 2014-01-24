@@ -7,7 +7,7 @@ import structs/[ArrayList]
 import eggplant/[tree, sha1, bsdiff, buffer, xz, size]
 
 Egg: class {
-    startMagic: UInt32 = 0xBEEFDADD
+    startMagic: UInt32 = 0xBEEFDAD2
 
     add := ArrayList<EggAdd> new()
     mod := ArrayList<EggMod> new()
@@ -97,6 +97,7 @@ EggMagic: enum from UInt8 {
     DAT = 0xDA
     SHA = 0xA1
     FLG = 0xF1
+    SIZ = 0xFA
 }
 
 EggFlags: enum from UInt8 {
@@ -121,8 +122,9 @@ EggNode: abstract class {
 EggFileNode: abstract class extends EggNode {
     flags: UInt8
     sum: SHA1Sum
+    size: UInt64
 
-    init: func (.path, =flags, =sum) {
+    init: func (.path, =flags, =sum, =size) {
         super(path)
     }
 
@@ -134,8 +136,8 @@ EggFileNode: abstract class extends EggNode {
 EggFileBufferNode: abstract class extends EggFileNode {
     buffer: EggBuffer
 
-    init: func (.path, .flags, .sum, =buffer) {
-        super(path, flags, sum)
+    init: func (.path, .flags, .sum, .size, =buffer) {
+        super(path, flags, sum, size)
     }
 
     init: func ~read (r: EggReader) {
@@ -149,6 +151,9 @@ EggFileBufferNode: abstract class extends EggFileNode {
 
         r checkMagic(EggMagic SHA)
         sum = SHA1Sum new(r readBuffer())
+
+        r checkMagic(EggMagic SIZ)
+        size = r readUInt64()
     }
 
     write: func ~withMagic (w: EggWriter, magic: UInt8) {
@@ -163,12 +168,15 @@ EggFileBufferNode: abstract class extends EggFileNode {
 
         w writeMagic(EggMagic SHA)
         w writeBytes(sum data, sum size)
+
+        w writeMagic(EggMagic SIZ)
+        w writeUInt64(size)
     }
 }
 
 EggAdd: class extends EggFileBufferNode {
-    init: func ~cons (.path, .flags, .sum, .buffer) {
-        super(path, flags, sum, buffer)
+    init: func ~cons (.path, .flags, .sum, .size, .buffer) {
+        super(path, flags, sum, size, buffer)
     }
 
     init: func ~read (r: EggReader) {
@@ -181,8 +189,8 @@ EggAdd: class extends EggFileBufferNode {
 }
 
 EggMod: class extends EggFileBufferNode {
-    init: func ~cons (.path, .flags, .sum, .buffer) {
-        super(path, flags, sum, buffer)
+    init: func ~cons (.path, .flags, .sum, .size, .buffer) {
+        super(path, flags, sum, size, buffer)
     }
 
     init: func ~read (r: EggReader) {
@@ -210,8 +218,8 @@ EggDel: class extends EggNode {
 }
 
 EggEqu: class extends EggFileNode {
-    init: func ~cons (.path, .flags, .sum) {
-        super(path, flags, sum)
+    init: func ~cons (.path, .flags, .sum, .size) {
+        super(path, flags, sum, size)
     }
 
     init: func ~read (r: EggReader) {
@@ -222,6 +230,9 @@ EggEqu: class extends EggFileNode {
 
         r checkMagic(EggMagic SHA)
         sum = SHA1Sum new(r readBuffer())
+
+        r checkMagic(EggMagic SIZ)
+        size = r readUInt64()
     }
 
     write: func (w: EggWriter) {
@@ -233,6 +244,9 @@ EggEqu: class extends EggFileNode {
 
         w writeMagic(EggMagic SHA)
         w writeBytes(sum data, sum size)
+
+        w writeMagic(EggMagic SIZ)
+        w writeUInt64(size)
     }
 }
 
@@ -260,8 +274,12 @@ EggWriter: class {
     }
 
     writeBytes: func (data: Pointer, length: SizeT) {
-        bin u32(length)
+        bin u64(length)
         fw write(data, length)
+    }
+
+    writeUInt64: func (number: UInt64) {
+        bin u64(number)
     }
 
     close: func {
@@ -296,7 +314,7 @@ EggReader: class {
     }
 
     readString: func -> String {
-        len := bin u32()
+        len := bin u64()
         buff := Buffer new(len + 1)
         fr read(buff data, 0, len)
         buff data[len + 1] = '\0'
@@ -305,13 +323,17 @@ EggReader: class {
     }
 
     readBuffer: func -> EggBuffer {
-        len := bin u32()
+        len := bin u64() as SizeT
         off: SizeT = 0
         buff := EggBuffer new(len)
         while (off < len) {
             off += fr read(buff data, off, len - off)
         }
         buff
+    }
+
+    readUInt64: func -> UInt64 {
+        bin u64()
     }
 
     close: func {
