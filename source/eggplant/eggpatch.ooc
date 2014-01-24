@@ -41,7 +41,7 @@ egg_patch: func (oldie, patch: File) {
         if (!sum equals?(e sum)) {
             "#{e path} equ but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             continue
         }
 
@@ -61,7 +61,7 @@ egg_patch: func (oldie, patch: File) {
         if (!sum equals?(e sum)) {
             "#{e path} added but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             continue
         }
     }
@@ -72,7 +72,7 @@ egg_patch: func (oldie, patch: File) {
         if (!n) {
             "#{e path} should be there so we can mod it" println()
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             continue
         }
 
@@ -91,7 +91,7 @@ egg_patch: func (oldie, patch: File) {
             } else {
                 "#{e path} to be modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
                 errs += 1
-                log add(e path, e flags, e sum)
+                log add(e path, e flags, e sum, e size)
                 continue
             }
         }
@@ -100,7 +100,7 @@ egg_patch: func (oldie, patch: File) {
         if (!sum equals?(e sum)) {
             "#{e path} was modded but sha1 mismatch. expected: #{e sum}, got: #{sum}" println()
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             continue
         }
     }

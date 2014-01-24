@@ -24,14 +24,14 @@ egg_check: func (kiddo, patch: File) {
         n := kt nodes get(e path)
         if (!n) {
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             "#{e path} should be there" println()
             continue
         }
 
         if (!n sum equals?(e sum)) {
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             "#{e path} sha1 mismatch, expected: #{e sum}, got #{n sum}" println()
         }
     }
@@ -40,14 +40,14 @@ egg_check: func (kiddo, patch: File) {
         n := kt nodes get(e path)
         if (!n) {
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             "#{e path} should be there" println()
             continue
         }
 
         if (!n sum equals?(e sum)) {
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             "#{e path} sha1 mismatch, expected: #{e sum}, got #{n sum}" println()
         }
     }
@@ -56,14 +56,14 @@ egg_check: func (kiddo, patch: File) {
         n := kt nodes get(e path)
         if (!n) {
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             "#{e path} should be there" println()
             continue
         }
 
         if (!n sum equals?(e sum)) {
             errs += 1
-            log add(e path, e flags, e sum)
+            log add(e path, e flags, e sum, e size)
             "#{e path} sha1 mismatch, expected: #{e sum}, got #{n sum}" println()
         }
     }

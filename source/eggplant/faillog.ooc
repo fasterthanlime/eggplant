@@ -19,12 +19,14 @@ FailLog: class {
         list = SequenceNode new()
         root["items"] = list
     }
-    
-    add: func (path: String, flags: UInt8, sum: SHA1Sum) {
+
+    add: func (path: String, flags: UInt8, sum: SHA1Sum, size: UInt64) {
         map := MappingNode new()
         map["path"] = path
         map["exec"] = ((flags & EggFlags EXC) != 0) toString()
         map["sha1"] = sum toString()
+        sizeScalar := "%llu" format(size)
+        map["size"] = sizeScalar
         list nodes add(map)
     }
 

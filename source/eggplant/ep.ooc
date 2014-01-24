@@ -16,7 +16,7 @@ Eggplant: class {
     args: ArrayList<String>
     options := HashMap<String, String> new()
 
-    VERSION := "2.0.0"
+    VERSION := "2.1.0"
 
     init: func (=args) {
         processOptions()
